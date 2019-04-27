@@ -1,1 +1,6 @@
 theme: jekyll-theme-minimal
+
+title: jornada-automação-testes
+description: Uma jornada para a automação de testes em código legado
+logo: https://github.com/matheusaraujo/jornada-automacao-testes/raw/master/docs/logo.jpg
+show_downloads: true

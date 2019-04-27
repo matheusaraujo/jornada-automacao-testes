@@ -1,5 +1,3 @@
-# Jornada para Automação de Testes em Código Legado
-
 ## Objetivo
 @TO-DO
 
