@@ -13,11 +13,14 @@ namespace GestaoContratos.Controllers
         [HttpGet]       
         [Route("contratos")]
         [ResponseType(typeof(IList<ContratoDto>))]
-        public IHttpActionResult ObterListaContrato()
+        public IHttpActionResult ObterContratos()
         {
             try
             {
-                return Ok(Repositorio.ObterContratos());
+                var contratos = Repositorio.ObterContratos();
+                if (contratos == null || contratos.Count == 0)
+                    return NotFound();
+                return Ok(contratos);
             }
             catch (Exception e)
             {
@@ -40,5 +43,56 @@ namespace GestaoContratos.Controllers
                 return InternalServerError(e);
             }
         }
+
+        [HttpGet]
+        [Route("contratos/{contratoId}")]
+        [ResponseType(typeof(ContratoDto))]
+        public IHttpActionResult ObterContrato(int contratoId)
+        {
+            try
+            {
+                var contrato = Repositorio.ObterContrato(contratoId);
+                if (contrato == null)
+                    return NotFound();
+                return Ok(contrato);
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+        }
+
+        [HttpPut]
+        [Route("contratos/{contratoId}")]
+        [ResponseType(typeof(void))]
+        public IHttpActionResult AtualizarContrato(int contratoId, [FromBody] ContratoDto contrato)
+        {
+            try
+            {
+                Repositorio.AtualizarContrato(contratoId, contrato);
+                return StatusCode(System.Net.HttpStatusCode.NoContent);
+            }
+            catch(Exception e)
+            {
+                return InternalServerError(e);
+            }
+        }
+
+        [HttpDelete]
+        [Route("contratos/{contratoId}")]
+        [ResponseType(typeof(void))]
+        public IHttpActionResult RemoverContrato(int contratoId)
+        {
+            try
+            {
+                Repositorio.DeletarContrato(contratoId);
+                return StatusCode(System.Net.HttpStatusCode.NoContent);
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+        }
+
     }
 }
