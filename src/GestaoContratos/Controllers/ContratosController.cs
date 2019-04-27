@@ -1,9 +1,10 @@
 ﻿using GestaoContratos.Models;
 using GestaoContratos.Repository;
+using Swashbuckle.Swagger.Annotations;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Web.Http;
-using System.Web.Http.Description;
 
 namespace GestaoContratos.Controllers
 {
@@ -11,8 +12,10 @@ namespace GestaoContratos.Controllers
     public class ContratosController : ApiController
     {
         [HttpGet]       
-        [Route("contratos")]
-        [ResponseType(typeof(IList<ContratoDto>))]
+        [Route("contratos")]        
+        [SwaggerResponse(HttpStatusCode.OK, "Contratos", typeof(IList<Contrato>))]
+        [SwaggerResponse(HttpStatusCode.NotFound, "Não encontrado")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro")]
         public IHttpActionResult ObterContratos()
         {
             try
@@ -29,9 +32,10 @@ namespace GestaoContratos.Controllers
         }
 
         [HttpPost]
-        [Route("contratos")]
-        [ResponseType(typeof(int))]
-        public IHttpActionResult InserirContrato([FromBody] ContratoDto contrato)
+        [Route("contratos")]        
+        [SwaggerResponse(HttpStatusCode.Created, "Contrato", typeof(int))]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro")]
+        public IHttpActionResult InserirContrato([FromBody] Contrato contrato)
         {
             try
             {
@@ -45,8 +49,10 @@ namespace GestaoContratos.Controllers
         }
 
         [HttpGet]
-        [Route("contratos/{contratoId}")]
-        [ResponseType(typeof(ContratoDto))]
+        [Route("contratos/{contratoId}")]        
+        [SwaggerResponse(HttpStatusCode.OK, "Contrato", typeof(Contrato))]
+        [SwaggerResponse(HttpStatusCode.NotFound, "Não encontrado")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro")]
         public IHttpActionResult ObterContrato(int contratoId)
         {
             try
@@ -63,14 +69,15 @@ namespace GestaoContratos.Controllers
         }
 
         [HttpPut]
-        [Route("contratos/{contratoId}")]
-        [ResponseType(typeof(void))]
-        public IHttpActionResult AtualizarContrato(int contratoId, [FromBody] ContratoDto contrato)
+        [Route("contratos/{contratoId}")]        
+        [SwaggerResponse(HttpStatusCode.NoContent, "Alterado")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro")]
+        public IHttpActionResult AtualizarContrato(int contratoId, [FromBody] Contrato contrato)
         {
             try
             {
                 Repositorio.AtualizarContrato(contratoId, contrato);
-                return StatusCode(System.Net.HttpStatusCode.NoContent);
+                return StatusCode(HttpStatusCode.NoContent);
             }
             catch(Exception e)
             {
@@ -80,13 +87,14 @@ namespace GestaoContratos.Controllers
 
         [HttpDelete]
         [Route("contratos/{contratoId}")]
-        [ResponseType(typeof(void))]
-        public IHttpActionResult RemoverContrato(int contratoId)
+        [SwaggerResponse(HttpStatusCode.NoContent, "Removido")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro")]
+        public IHttpActionResult DeletarContrato(int contratoId)
         {
             try
             {
                 Repositorio.DeletarContrato(contratoId);
-                return StatusCode(System.Net.HttpStatusCode.NoContent);
+                return StatusCode(HttpStatusCode.NoContent);
             }
             catch (Exception e)
             {

@@ -2,7 +2,7 @@
 
 namespace GestaoContratos.Models
 {
-    public class PedidoDto
+    public class Pedido
     {
         public int PedidoId { get; set; }
         public int ContratoId { get; set; }

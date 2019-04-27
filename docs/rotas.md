@@ -15,7 +15,7 @@
 | **Verbo**     | **Rota**                        |
 |---------------|----------------------------------------------------|
 | GET           | `api/v1/contratos/{contratoId}/pedidos`            |
-| @TO-DO POST   | `api/v1/contratos/{contratoId}/pedidos`            |
-| @TO-DO GET    | `api/v1/contratos/{contratoId}/pedidos/{pedidoId}` |
-| @TO-DO PUT    | `api/v1/contratos/{contratoId}/pedidos/{pedidoId}` |
-| @TO-DO DELETE | `api/v1/contratos/{contratoId}/pedidos/{pedidoId}` |
+| POST          | `api/v1/contratos/{contratoId}/pedidos`            |
+| GET           | `api/v1/contratos/{contratoId}/pedidos/{pedidoId}` |
+| PUT           | `api/v1/contratos/{contratoId}/pedidos/{pedidoId}` |
+| DELETE        | `api/v1/contratos/{contratoId}/pedidos/{pedidoId}` |
