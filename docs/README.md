@@ -6,25 +6,47 @@
 
 ---
 
+## Rotas da API
+
+**Contratos**
+
+| **Verbo**     | **Rota**                        |
+|---------------|---------------------------------|
+| GET           | `api/v1/contratos`              |
+| POST          | `api/v1/contratos`              |
+| @TO-DO GET    | `api/v1/contratos/{contratoId}` |
+| @TO-DO PUT    | `api/v1/contratos/{contratoId}` |
+| @TO-DO DELETE | `api/v1/contratos/{contratoId}` |
+
+**Pedidos**
+
+| **Verbo**     | **Rota**                        |
+|---------------|----------------------------------------------------|
+| @TO-DO GET    | `api/v1/contratos/{contratoId}/pedidos`            |
+| @TO-DO POST   | `api/v1/contratos/{contratoId}/pedidos`            |
+| @TO-DO GET    | `api/v1/contratos/{contratoId}/pedidos/{pedidoId}` |
+| @TO-DO PUT    | `api/v1/contratos/{contratoId}/pedidos/{pedidoId}` |
+| @TO-DO DELETE | `api/v1/contratos/{contratoId}/pedidos/{pedidoId}` |
+
 ## Etapas
 
-### O Código
+### 1. O Código
 @TO-DO
 
-### Teste externo ao código
+### 2. Teste externo ao código
 @TO-DO
 
-### Teste direto no código
+### 3. Teste direto no código
 @TO-DO
 
-### Teste com banco criado em tempo de desenvolvimento
+### 4. Teste com banco criado em tempo de desenvolvimento
 @TO-DO
 
-### Teste com mock manual
+### 5. Teste com mock manual
 @TO-DO
 
-### Teste com framework de mock
+### 6. Teste com framework de mock
 @TO-DO
 
-### Teste GWT
+### 7. Teste GWT
 @TO-DO
