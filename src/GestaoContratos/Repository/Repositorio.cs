@@ -13,26 +13,30 @@ namespace GestaoContratos.Repository
         public static IList<Contrato> ObterContratos()
         {
             var contratos = new List<Contrato>();
-
             string sql = "SELECT * FROM Contrato";
-            var conexao = new SQLiteConnection($"DataSource={AppContext.BaseDirectory}\\App_Data\\database.sqlite;Version=3");
-            var comando = new SQLiteCommand(sql, conexao);
-            comando.Connection.Open();
-            var consulta = comando.ExecuteReader();
 
-            while (consulta.Read())
+            using (var conexao = new SQLiteConnection($"DataSource={AppContext.BaseDirectory}\\App_Data\\database.sqlite;Version=3"))
             {
-                contratos.Add(new Contrato()
+                using (var comando = new SQLiteCommand(sql, conexao))
                 {
-                    ContratoId = int.Parse(consulta["ContratoId"].ToString()),
-                    VolumeDisponivel = float.Parse(consulta["VolumeDisponivel"].ToString()),
-                    DataInicioVigencia = new DateTime(long.Parse(consulta["DataInicioVigencia"].ToString())),
-                    DataFimVigencia = new DateTime(long.Parse(consulta["DataFimVigencia"].ToString())),
-                    Ativo = (consulta["Ativo"].ToString() == "1")
-                });
+                    comando.Connection.Open();
+                    using (var consulta = comando.ExecuteReader())
+                    {
+                        while (consulta.Read())
+                        {
+                            contratos.Add(new Contrato()
+                            {
+                                ContratoId = int.Parse(consulta["ContratoId"].ToString()),
+                                VolumeDisponivel = float.Parse(consulta["VolumeDisponivel"].ToString()),
+                                DataInicioVigencia = new DateTime(long.Parse(consulta["DataInicioVigencia"].ToString())),
+                                DataFimVigencia = new DateTime(long.Parse(consulta["DataFimVigencia"].ToString())),
+                                Ativo = (consulta["Ativo"].ToString() == "1")
+                            });
+                        }
+                        return contratos;
+                    }
+                }
             }
-
-            return contratos;
         }
 
         public static int InserirContrato(Contrato contrato)
@@ -40,43 +44,48 @@ namespace GestaoContratos.Repository
             string sql = @"INSERT INTO Contrato (VolumeDisponivel, DataInicioVigencia, DataFimVigencia, Ativo)
                 VALUES (@VolumeDisponivel, @DataInicioVigencia, @DataFimVigencia, @Ativo); SELECT last_insert_rowid();";
 
-            var conexao = new SQLiteConnection($"DataSource={AppContext.BaseDirectory}\\App_Data\\database.sqlite;Version=3");
-            var comando = new SQLiteCommand(sql, conexao);
-            comando.Connection.Open();
-
-            comando.Parameters.AddWithValue("VolumeDisponivel", contrato.VolumeDisponivel);
-            comando.Parameters.AddWithValue("DataInicioVigencia", contrato.DataInicioVigencia.Ticks);
-            comando.Parameters.AddWithValue("DataFimVigencia", contrato.DataFimVigencia.Ticks);
-            comando.Parameters.AddWithValue("Ativo", contrato.Ativo);
-
-            return int.Parse(comando.ExecuteScalar().ToString());
+            using (var conexao = new SQLiteConnection($"DataSource={AppContext.BaseDirectory}\\App_Data\\database.sqlite;Version=3"))
+            {
+                using (var comando = new SQLiteCommand(sql, conexao))
+                {
+                    comando.Connection.Open();
+                    comando.Parameters.AddWithValue("VolumeDisponivel", contrato.VolumeDisponivel);
+                    comando.Parameters.AddWithValue("DataInicioVigencia", contrato.DataInicioVigencia.Ticks);
+                    comando.Parameters.AddWithValue("DataFimVigencia", contrato.DataFimVigencia.Ticks);
+                    comando.Parameters.AddWithValue("Ativo", contrato.Ativo);
+                    return int.Parse(comando.ExecuteScalar().ToString());
+                }
+            }
         }
 
         public static Contrato ObterContrato(int contratoId)
         {
             string sql = "SELECT * FROM Contrato WHERE ContratoId = @ContratoId";
-            var conexao = new SQLiteConnection($"DataSource={AppContext.BaseDirectory}\\App_Data\\database.sqlite;Version=3");
-            var comando = new SQLiteCommand(sql, conexao);
-            comando.Connection.Open();
-
-            comando.Parameters.AddWithValue("ContratoId", contratoId);
-            
-            var consulta = comando.ExecuteReader();
-
-            if (!consulta.Read())
-                return null;
-            
-            return new Contrato()
+            using (var conexao = new SQLiteConnection($"DataSource={AppContext.BaseDirectory}\\App_Data\\database.sqlite;Version=3"))
             {
-                ContratoId = int.Parse(consulta["ContratoId"].ToString()),
-                VolumeDisponivel = float.Parse(consulta["VolumeDisponivel"].ToString()),
-                DataInicioVigencia = new DateTime(long.Parse(consulta["DataInicioVigencia"].ToString())),
-                DataFimVigencia = new DateTime(long.Parse(consulta["DataFimVigencia"].ToString())),
-                Ativo = (consulta["Ativo"].ToString() == "1")
-            };
+                using (var comando = new SQLiteCommand(sql, conexao))
+                {
+                    comando.Connection.Open();
+                    comando.Parameters.AddWithValue("ContratoId", contratoId);
+                    using (var consulta = comando.ExecuteReader())
+                    {
+                        if (!consulta.Read())
+                            return null;
+
+                        return new Contrato()
+                        {
+                            ContratoId = int.Parse(consulta["ContratoId"].ToString()),
+                            VolumeDisponivel = float.Parse(consulta["VolumeDisponivel"].ToString()),
+                            DataInicioVigencia = new DateTime(long.Parse(consulta["DataInicioVigencia"].ToString())),
+                            DataFimVigencia = new DateTime(long.Parse(consulta["DataFimVigencia"].ToString())),
+                            Ativo = (consulta["Ativo"].ToString() == "1")
+                        };
+                    }
+                }
+            }
         }
 
-        public static void AtualizarContrato(int contratoId, Contrato contrato)
+        public static void AtualizarContrato(Contrato contrato)
         {
             string sql = @"UPDATE Contrato 
                 SET VolumeDisponivel = @VolumeDisponivel, 
@@ -85,30 +94,34 @@ namespace GestaoContratos.Repository
                 Ativo = @Ativo
                 WHERE ContratoId = @ContratoId";
 
-            var conexao = new SQLiteConnection($"DataSource={AppContext.BaseDirectory}\\App_Data\\database.sqlite;Version=3");
-            var comando = new SQLiteCommand(sql, conexao);
-            comando.Connection.Open();
-
-            comando.Parameters.AddWithValue("ContratoId", contratoId);
-            comando.Parameters.AddWithValue("VolumeDisponivel", contrato.VolumeDisponivel);
-            comando.Parameters.AddWithValue("DataInicioVigencia", contrato.DataInicioVigencia.Ticks);
-            comando.Parameters.AddWithValue("DataFimVigencia", contrato.DataFimVigencia.Ticks);
-            comando.Parameters.AddWithValue("Ativo", contrato.Ativo);
-
-            comando.ExecuteNonQuery();            
+            using (var conexao = new SQLiteConnection($"DataSource={AppContext.BaseDirectory}\\App_Data\\database.sqlite;Version=3"))
+            {
+                using (var comando = new SQLiteCommand(sql, conexao))
+                {
+                    comando.Connection.Open();
+                    comando.Parameters.AddWithValue("ContratoId", contrato.ContratoId);
+                    comando.Parameters.AddWithValue("VolumeDisponivel", contrato.VolumeDisponivel);
+                    comando.Parameters.AddWithValue("DataInicioVigencia", contrato.DataInicioVigencia.Ticks);
+                    comando.Parameters.AddWithValue("DataFimVigencia", contrato.DataFimVigencia.Ticks);
+                    comando.Parameters.AddWithValue("Ativo", contrato.Ativo);
+                    comando.ExecuteNonQuery();
+                }
+            }
         }
 
         public static void DeletarContrato(int contratoId)
         {
             string sql = @"DELETE FROM Contrato WHERE ContratoId = @ContratoId";
 
-            var conexao = new SQLiteConnection($"DataSource={AppContext.BaseDirectory}\\App_Data\\database.sqlite;Version=3");
-            var comando = new SQLiteCommand(sql, conexao);
-            comando.Connection.Open();
-
-            comando.Parameters.AddWithValue("ContratoId", contratoId);
-
-            comando.ExecuteNonQuery();
+            using (var conexao = new SQLiteConnection($"DataSource={AppContext.BaseDirectory}\\App_Data\\database.sqlite;Version=3"))
+            {
+                using (var comando = new SQLiteCommand(sql, conexao))
+                {
+                    comando.Connection.Open();
+                    comando.Parameters.AddWithValue("ContratoId", contratoId);
+                    comando.ExecuteNonQuery();
+                }
+            }
         }
 
         #endregion
@@ -120,96 +133,116 @@ namespace GestaoContratos.Repository
             var lista = new List<Pedido>();
 
             string sql = "SELECT * FROM Pedido WHERE ContratoId = @ContratoId";
-            var conexao = new SQLiteConnection($"DataSource={AppContext.BaseDirectory}\\App_Data\\database.sqlite;Version=3");
-            var comando = new SQLiteCommand(sql, conexao);
-            comando.Parameters.AddWithValue("ContratoId", contratoId);
-            comando.Connection.Open();
-            var consulta = comando.ExecuteReader();
-
-            while (consulta.Read())
+            using (var conexao = new SQLiteConnection($"DataSource={AppContext.BaseDirectory}\\App_Data\\database.sqlite;Version=3"))
             {
-                lista.Add(new Pedido()
+                using (var comando = new SQLiteCommand(sql, conexao))
                 {
-                    PedidoId = int.Parse(consulta["PedidoId"].ToString()),
-                    ContratoId = int.Parse(consulta["ContratoId"].ToString()),
-                    Volume = float.Parse(consulta["Volume"].ToString()),
-                    DataPedido = new DateTime(long.Parse(consulta["DataPedido"].ToString()))
-                });
+                    comando.Parameters.AddWithValue("ContratoId", contratoId);
+                    comando.Connection.Open();
+                    using (var consulta = comando.ExecuteReader())
+                    {
+                        while (consulta.Read())
+                        {
+                            lista.Add(new Pedido()
+                            {
+                                PedidoId = int.Parse(consulta["PedidoId"].ToString()),
+                                ContratoId = int.Parse(consulta["ContratoId"].ToString()),
+                                Volume = float.Parse(consulta["Volume"].ToString()),
+                                DataPedido = new DateTime(long.Parse(consulta["DataPedido"].ToString()))
+                            });
+                        }
+                        return lista;
+                    }
+                }
             }
-
-            return lista;
         }
 
         public static Pedido ObterPedido(int contratoId, int pedidoId)
         {
             string sql = "SELECT * FROM Pedido WHERE ContratoId = @ContratoId AND PedidoId = @PedidoId";
-            var conexao = new SQLiteConnection($"DataSource={AppContext.BaseDirectory}\\App_Data\\database.sqlite;Version=3");
-            var comando = new SQLiteCommand(sql, conexao);
-            comando.Parameters.AddWithValue("ContratoId", contratoId);
-            comando.Parameters.AddWithValue("PedidoId", pedidoId);
-            comando.Connection.Open();
-
-            var consulta = comando.ExecuteReader();
-
-            if (!consulta.Read())
-                return null;
-            
-            return new Pedido()
+            using (var conexao = new SQLiteConnection($"DataSource={AppContext.BaseDirectory}\\App_Data\\database.sqlite;Version=3"))
             {
-                PedidoId = int.Parse(consulta["PedidoId"].ToString()),
-                ContratoId = int.Parse(consulta["ContratoId"].ToString()),
-                Volume = float.Parse(consulta["Volume"].ToString()),
-                DataPedido = new DateTime(long.Parse(consulta["DataPedido"].ToString()))
-            };
+                using (var comando = new SQLiteCommand(sql, conexao))
+                {
+                    comando.Parameters.AddWithValue("ContratoId", contratoId);
+                    comando.Parameters.AddWithValue("PedidoId", pedidoId);
+                    comando.Connection.Open();
+
+                    using (var consulta = comando.ExecuteReader())
+                    {
+                        if (!consulta.Read())
+                            return null;
+
+                        return new Pedido()
+                        {
+                            PedidoId = int.Parse(consulta["PedidoId"].ToString()),
+                            ContratoId = int.Parse(consulta["ContratoId"].ToString()),
+                            Volume = float.Parse(consulta["Volume"].ToString()),
+                            DataPedido = new DateTime(long.Parse(consulta["DataPedido"].ToString())),
+                            Atendido = bool.Parse(consulta["Atendido"].ToString()),
+                        };
+                    }
+                }
+            }
         }
 
-        public static int InserirPedido(int contratoId, Pedido pedido)
+        public static int InserirPedido(Pedido pedido)
         {
-            string sql = @"INSERT INTO Pedido (ContratoId, Volume, DataPedido)
-                    VALUES (@ContratoId, @Volume, @DataPedido); SELECT last_insert_rowid();";
+            string sql = @"INSERT INTO Pedido (ContratoId, Volume, DataPedido, Atendido)
+                    VALUES (@ContratoId, @Volume, @DataPedido, @Atendido); SELECT last_insert_rowid();";
 
-            var conexao = new SQLiteConnection($"DataSource={AppContext.BaseDirectory}\\App_Data\\database.sqlite;Version=3");
-            var comando = new SQLiteCommand(sql, conexao);
-            comando.Connection.Open();
-
-            comando.Parameters.AddWithValue("ContratoId", contratoId);
-            comando.Parameters.AddWithValue("Volume", pedido.Volume);
-            comando.Parameters.AddWithValue("DataPedido", pedido.DataPedido.Ticks);
-            
-            return int.Parse(comando.ExecuteScalar().ToString());
+            using (var conexao = new SQLiteConnection($"DataSource={AppContext.BaseDirectory}\\App_Data\\database.sqlite;Version=3"))
+            {
+                using (var comando = new SQLiteCommand(sql, conexao))
+                {
+                    comando.Connection.Open();
+                    comando.Parameters.AddWithValue("ContratoId", pedido.ContratoId);
+                    comando.Parameters.AddWithValue("Volume", pedido.Volume);
+                    comando.Parameters.AddWithValue("DataPedido", pedido.DataPedido.Ticks);
+                    comando.Parameters.AddWithValue("Atendido", pedido.Atendido ? 1 : 0);
+                    return int.Parse(comando.ExecuteScalar().ToString());
+                }
+            }
         }
 
-        public static void AtualizarPedido(int contratoId, int pedidoId, Pedido pedido)
+        public static void AtualizarPedido(Pedido pedido)
         {
             string sql = @"UPDATE Pedido 
                 SET Volume = @Volume,
-                DataPedido = @DataPedido
+                DataPedido = @DataPedido,
+                Atendido = @Atendido,
                 WHERE ContratoId = @ContratoId AND PedidoId = @PedidoId";
 
-            var conexao = new SQLiteConnection($"DataSource={AppContext.BaseDirectory}\\App_Data\\database.sqlite;Version=3");
-            var comando = new SQLiteCommand(sql, conexao);
-            comando.Connection.Open();
-
-            comando.Parameters.AddWithValue("ContratoId", contratoId);
-            comando.Parameters.AddWithValue("PedidoId", pedidoId);
-            comando.Parameters.AddWithValue("Volume", pedido.Volume);
-            comando.Parameters.AddWithValue("DataPedido", pedido.DataPedido.Ticks);
-
-            comando.ExecuteNonQuery();
+            using (var conexao = new SQLiteConnection($"DataSource={AppContext.BaseDirectory}\\App_Data\\database.sqlite;Version=3"))
+            {
+                using (var comando = new SQLiteCommand(sql, conexao))
+                {
+                    comando.Connection.Open();
+                    comando.Parameters.AddWithValue("ContratoId", pedido.ContratoId);
+                    comando.Parameters.AddWithValue("PedidoId", pedido.PedidoId);
+                    comando.Parameters.AddWithValue("Volume", pedido.Volume);
+                    comando.Parameters.AddWithValue("DataPedido", pedido.DataPedido.Ticks);
+                    comando.Parameters.AddWithValue("Atendido", pedido.Atendido);
+                    comando.ExecuteNonQuery();
+                }
+            }
         }
 
         public static void DeletarPedido(int contratoId, int pedidoId)
         {
             string sql = @"DELETE FROM Pedido WHERE ContratoId = @ContratoId AND ContratoId = @ContratoId";
 
-            var conexao = new SQLiteConnection($"DataSource={AppContext.BaseDirectory}\\App_Data\\database.sqlite;Version=3");
-            var comando = new SQLiteCommand(sql, conexao);
-            comando.Connection.Open();
-
-            comando.Parameters.AddWithValue("ContratoId", contratoId);
-            comando.Parameters.AddWithValue("PedidoId", pedidoId);
-
-            comando.ExecuteNonQuery();
+            using (var conexao = new SQLiteConnection($"DataSource={AppContext.BaseDirectory}\\App_Data\\database.sqlite;Version=3"))
+            {
+                using (var comando = new SQLiteCommand(sql, conexao))
+                {
+                    comando.Connection.Open();
+                    comando.Parameters.AddWithValue("ContratoId", contratoId);
+                    comando.Parameters.AddWithValue("PedidoId", pedidoId);
+                    comando.ExecuteNonQuery();
+                    comando.Connection.Close();
+                }
+            }
         }
 
         #endregion

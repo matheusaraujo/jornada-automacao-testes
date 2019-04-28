@@ -1,31 +1,37 @@
 ## Regras da API
-- @TO-DO Valores de `id` devem ser os mesmos na query string e nos objetos
+- `1001`, `1002` - Os objetos enviados no corpo da mensagem devem ter o mesmo id dos parâmetros na rota
 
 ## Regras de Negócio
 
 ### Inserir Contrato
-- @TO-DO Data de início de vigência deve ser menor do que hoje
-- @TO-DO Data de fim de vigência deve ser menor do que hoje
-- @TO-DO Volume disponível deve ser maior do que hoje
+- `2001` - A data de início de vigência do contrato deve ser menor ou igual à data atual!
+- `2002` - A data de fim de vigência do contrato deve ser maior ou igual à data atual!
+- `2003` - O colume disponível do contrato deve ser maior ou igual a 1!
 
 ### Atualizar Contrato
-- @TO-DO Data de início de vigência deve ser menor do que hoje
-- @TO-DO Data de fim de vigência deve ser menor do que hoje
-- @TO-DO Volume disponível deve ser maior do que hoje
+- `2001` - A data de início de vigência do contrato deve ser menor ou igual à data atual!
+- `2002` - A data de fim de vigência do contrato deve ser maior ou igual à data atual!
+- `2003` - O volume disponível do contrato deve ser maior ou igual a 1!
 
 ### Remover Contrato
-- @TO-DO Todos os pedidos do contrato devem ser anteriores a hoje
+- `2004` - O contrato não pode possuir pedidos para ser removido!
 
 ### Inserir Pedido
-- @TO-DO O volume do pedido deve ser maior do que 1
-- @TO-DO A data-hora do pedido deve ser menor do que a data-hora atual
-- @TO-DO O contrato do pedido deve estar ativo
-- @TO-DO O volume do pedido deve ser menor ou igual ao volume disponível do contrato
-- @TO-DO A data-hora do pedido deve estar entre as datas de vigência do contrato
+- `3001` O volume do pedido deve ser maior ou igual a 1!
+- `3002` A data do pedido deve ser maior ou igual à data atual!
+- `3003` O pedido deve ser criado para um contrato existente!
+- `3004` O contrato do pedido deve estar ativo!
+- `3005` O volume do pedido deve ser menor ou igual ao volume disponível do contrato!
+- `3006` A data do pedido deve estar entre as datas de vigência do contrato!
+- @TO-DO **Ao inserir pedido, o volume disponível do contrato deve ser atualizado.**
 
 ### Atualizar Pedido
-- @TO-DO O volume do pedido deve ser maior do que 1
-- @TO-DO A data-hora do pedido deve ser menor do que a data-hora atual
-- @TO-DO O contrato do pedido deve estar ativo
-- @TO-DO O volume do pedido deve ser menor ou igual ao volume disponível do contrato
-- @TO-DO A data-hora do pedido deve estar entre as datas de vigência do contrato
+- `3001` O volume do pedido deve ser maior ou igual a 1!
+- `3002` A data do pedido deve ser maior ou igual à data atual!
+- `3004` O contrato do pedido deve estar ativo!
+- `3005` O volume do pedido deve ser menor ou igual ao volume disponível do contrato!
+- `3006` A data do pedido deve estar entre as datas de vigência do contrato!
+
+### Remover Pedido
+- `3007` O pedido deve ter status não atendido para ser excluído!
+- @TO-DO **Ao remover pedido, o volume disponível do contrato deve ser atualizado.**

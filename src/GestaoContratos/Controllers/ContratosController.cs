@@ -1,5 +1,6 @@
 ﻿using GestaoContratos.Models;
 using GestaoContratos.Repository;
+using GestaoContratos.Utils;
 using Swashbuckle.Swagger.Annotations;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace GestaoContratos.Controllers
         [Route("contratos")]        
         [SwaggerResponse(HttpStatusCode.OK, "Contratos", typeof(IList<Contrato>))]
         [SwaggerResponse(HttpStatusCode.NotFound, "Não encontrado")]
-        [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro interno")]
         public IHttpActionResult ObterContratos()
         {
             try
@@ -32,15 +33,27 @@ namespace GestaoContratos.Controllers
         }
 
         [HttpPost]
-        [Route("contratos")]        
-        [SwaggerResponse(HttpStatusCode.Created, "Contrato", typeof(int))]
-        [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro")]
+        [Route("contratos")]
+        [SwaggerResponse(HttpStatusCode.Created, "Criado", typeof(int))]
+        [SwaggerResponse(HttpStatusCode.PreconditionFailed, "Erro na requisição")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro interno")]
         public IHttpActionResult InserirContrato([FromBody] Contrato contrato)
         {
             try
             {
+                if (contrato.DataInicioVigencia.Date > DateTime.Now.Date)
+                    throw new RegraNegocioException(RegraNegocioEnum.DataInicioVigenciaInvalida);
+                else if (contrato.DataFimVigencia < DateTime.Now.Date)
+                    throw new RegraNegocioException(RegraNegocioEnum.DataFimVigenciaInvalida);
+                else if (contrato.VolumeDisponivel < 1)
+                    throw new RegraNegocioException(RegraNegocioEnum.VolumeDisponivelInvalido);
+
                 int contratoId = Repositorio.InserirContrato(contrato);
                 return Created(Request.RequestUri + contratoId.ToString(), contratoId);
+            }
+            catch (RegraNegocioException e)
+            {
+                return Content(HttpStatusCode.PreconditionFailed, e.Serializar());
             }
             catch (Exception e)
             {
@@ -52,7 +65,7 @@ namespace GestaoContratos.Controllers
         [Route("contratos/{contratoId}")]        
         [SwaggerResponse(HttpStatusCode.OK, "Contrato", typeof(Contrato))]
         [SwaggerResponse(HttpStatusCode.NotFound, "Não encontrado")]
-        [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro interno")]
         public IHttpActionResult ObterContrato(int contratoId)
         {
             try
@@ -71,15 +84,34 @@ namespace GestaoContratos.Controllers
         [HttpPut]
         [Route("contratos/{contratoId}")]        
         [SwaggerResponse(HttpStatusCode.NoContent, "Alterado")]
-        [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro")]
+        [SwaggerResponse(HttpStatusCode.NotFound, "Não encontrado")]
+        [SwaggerResponse(HttpStatusCode.PreconditionFailed, "Erro na requisição")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro interno")]
         public IHttpActionResult AtualizarContrato(int contratoId, [FromBody] Contrato contrato)
         {
             try
             {
-                Repositorio.AtualizarContrato(contratoId, contrato);
+                if (contrato.ContratoId != contratoId)
+                    throw new RegraNegocioException(RegraNegocioEnum.ContratoInvalido);
+                else if (contrato.DataInicioVigencia.Date > DateTime.Now.Date)
+                    throw new RegraNegocioException(RegraNegocioEnum.DataInicioVigenciaInvalida);
+                else if (contrato.DataFimVigencia < DateTime.Now.Date)
+                    throw new RegraNegocioException(RegraNegocioEnum.DataFimVigenciaInvalida);
+                else if (contrato.VolumeDisponivel < 1)
+                    throw new RegraNegocioException(RegraNegocioEnum.VolumeDisponivelInvalido);
+
+                var contratoAtual = Repositorio.ObterContrato(contratoId);
+                if (contratoAtual == null)
+                    return NotFound();
+
+                Repositorio.AtualizarContrato(contrato);
                 return StatusCode(HttpStatusCode.NoContent);
             }
-            catch(Exception e)
+            catch (RegraNegocioException e)
+            {
+                return Content(HttpStatusCode.PreconditionFailed, e.Serializar());
+            }
+            catch (Exception e)
             {
                 return InternalServerError(e);
             }
@@ -88,13 +120,26 @@ namespace GestaoContratos.Controllers
         [HttpDelete]
         [Route("contratos/{contratoId}")]
         [SwaggerResponse(HttpStatusCode.NoContent, "Removido")]
-        [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro")]
+        [SwaggerResponse(HttpStatusCode.PreconditionFailed, "Erro na requisição")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro interno")]
         public IHttpActionResult DeletarContrato(int contratoId)
         {
             try
             {
+                var contratoAtual = Repositorio.ObterContrato(contratoId);
+                if (contratoAtual == null)
+                    return NotFound();
+
+                var pedidos = Repositorio.ObterPedidos(contratoId);
+                if (pedidos != null && pedidos.Count > 0)
+                    throw new RegraNegocioException(RegraNegocioEnum.VolumeDisponivelInvalido);
+
                 Repositorio.DeletarContrato(contratoId);
                 return StatusCode(HttpStatusCode.NoContent);
+            }
+            catch (RegraNegocioException e)
+            {
+                return Content(HttpStatusCode.PreconditionFailed, e.Serializar());
             }
             catch (Exception e)
             {

@@ -8,5 +8,6 @@ namespace GestaoContratos.Models
         public int ContratoId { get; set; }
         public float Volume { get; set; }
         public DateTime DataPedido { get; set; }
+        public bool Atendido { get; set; }
     }
 }

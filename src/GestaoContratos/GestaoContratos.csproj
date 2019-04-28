@@ -126,6 +126,7 @@
     <Compile Include="Models\Pedido.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\Repositorio.cs" />
+    <Compile Include="Utils\RegraNegocioException.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\database.sqlite">
