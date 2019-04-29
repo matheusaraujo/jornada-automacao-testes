@@ -4,13 +4,14 @@ using GestaoContratos.Utils;
 using Swashbuckle.Swagger.Annotations;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Web.Http;
 
 namespace GestaoContratos.Controllers
 {
     [RoutePrefix("api/v1")]
-    public class ContratosController : ApiController
+    public class ContratosController : BaseApiController
     {
         [HttpGet]       
         [Route("contratos")]        
@@ -85,15 +86,17 @@ namespace GestaoContratos.Controllers
         [Route("contratos/{contratoId}")]        
         [SwaggerResponse(HttpStatusCode.NoContent, "Alterado")]
         [SwaggerResponse(HttpStatusCode.NotFound, "Não encontrado")]
+        [SwaggerResponse(HttpStatusCode.Conflict, "Conflito")]
         [SwaggerResponse(HttpStatusCode.PreconditionFailed, "Erro na requisição")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro interno")]
-        public IHttpActionResult AtualizarContrato(int contratoId, [FromBody] Contrato contrato)
+        public IHttpActionResult EditarContrato(int contratoId, [FromBody] Contrato contrato)
         {
             try
             {
                 if (contrato.ContratoId != contratoId)
-                    throw new RegraNegocioException(RegraNegocioEnum.ContratoInvalido);
-                else if (contrato.DataInicioVigencia.Date > DateTime.Now.Date)
+                    return Conflict();
+                    
+                if (contrato.DataInicioVigencia.Date > DateTime.Now.Date)
                     throw new RegraNegocioException(RegraNegocioEnum.DataInicioVigenciaInvalida);
                 else if (contrato.DataFimVigencia < DateTime.Now.Date)
                     throw new RegraNegocioException(RegraNegocioEnum.DataFimVigenciaInvalida);
@@ -104,8 +107,13 @@ namespace GestaoContratos.Controllers
                 if (contratoAtual == null)
                     return NotFound();
 
-                Repositorio.AtualizarContrato(contrato);
-                return StatusCode(HttpStatusCode.NoContent);
+                var pedidos = Repositorio.ObterPedidos(contratoId);
+                var volumePedidosPendentes = pedidos.Where(p => !p.Atendido).Sum(p => p.Volume);
+                if (contrato.VolumeDisponivel < volumePedidosPendentes)
+                    throw new RegraNegocioException(RegraNegocioEnum.VolumeDisponivelInvalidoEdicao);
+
+                Repositorio.EditarContrato(contrato);
+                return NoContent();
             }
             catch (RegraNegocioException e)
             {
@@ -132,10 +140,10 @@ namespace GestaoContratos.Controllers
 
                 var pedidos = Repositorio.ObterPedidos(contratoId);
                 if (pedidos != null && pedidos.Count > 0)
-                    throw new RegraNegocioException(RegraNegocioEnum.VolumeDisponivelInvalido);
+                    throw new RegraNegocioException(RegraNegocioEnum.ContratoPossuiPedidos);
 
                 Repositorio.DeletarContrato(contratoId);
-                return StatusCode(HttpStatusCode.NoContent);
+                return NoContent();
             }
             catch (RegraNegocioException e)
             {

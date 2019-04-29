@@ -1,7 +1,8 @@
+[Jornada automação de Testes](index)
+
 ## Etapas
 
 ### 0. O Código
-@TO-DO
 - `v0.0` Descrever a estrutura do código
 
 ### 1. Teste externo ao código

@@ -7,13 +7,12 @@ namespace GestaoContratos.Repository
 {
     public static class Repositorio
     {
-
         #region Contratos
 
         public static IList<Contrato> ObterContratos()
         {
             var contratos = new List<Contrato>();
-            string sql = "SELECT * FROM Contrato";
+            string sql = "SELECT * FROM Contrato ORDER BY Ativo DESC, VolumeDisponivel DESC";
 
             using (var conexao = new SQLiteConnection($"DataSource={AppContext.BaseDirectory}\\App_Data\\database.sqlite;Version=3"))
             {
@@ -85,7 +84,7 @@ namespace GestaoContratos.Repository
             }
         }
 
-        public static void AtualizarContrato(Contrato contrato)
+        public static void EditarContrato(Contrato contrato)
         {
             string sql = @"UPDATE Contrato 
                 SET VolumeDisponivel = @VolumeDisponivel, 
@@ -124,6 +123,24 @@ namespace GestaoContratos.Repository
             }
         }
 
+        public static void EditarVolumeContrato(Contrato contrato)
+        {
+            string sql = @"UPDATE Contrato 
+                SET VolumeDisponivel = @VolumeDisponivel
+                WHERE ContratoId = @ContratoId";
+
+            using (var conexao = new SQLiteConnection($"DataSource={AppContext.BaseDirectory}\\App_Data\\database.sqlite;Version=3"))
+            {
+                using (var comando = new SQLiteCommand(sql, conexao))
+                {
+                    comando.Connection.Open();
+                    comando.Parameters.AddWithValue("ContratoId", contrato.ContratoId);
+                    comando.Parameters.AddWithValue("VolumeDisponivel", contrato.VolumeDisponivel);                    
+                    comando.ExecuteNonQuery();
+                }
+            }
+        }
+
         #endregion
 
         #region Pedidos
@@ -132,7 +149,10 @@ namespace GestaoContratos.Repository
         {
             var lista = new List<Pedido>();
 
-            string sql = "SELECT * FROM Pedido WHERE ContratoId = @ContratoId";
+            string sql = @"SELECT * FROM Pedido 
+                WHERE ContratoId = @ContratoId
+                ORDER BY Atendido, DataPedido, Volume DESC";
+
             using (var conexao = new SQLiteConnection($"DataSource={AppContext.BaseDirectory}\\App_Data\\database.sqlite;Version=3"))
             {
                 using (var comando = new SQLiteCommand(sql, conexao))
@@ -148,7 +168,8 @@ namespace GestaoContratos.Repository
                                 PedidoId = int.Parse(consulta["PedidoId"].ToString()),
                                 ContratoId = int.Parse(consulta["ContratoId"].ToString()),
                                 Volume = float.Parse(consulta["Volume"].ToString()),
-                                DataPedido = new DateTime(long.Parse(consulta["DataPedido"].ToString()))
+                                DataPedido = new DateTime(long.Parse(consulta["DataPedido"].ToString())),
+                                Atendido = (consulta["Atendido"].ToString() == "1")
                             });
                         }
                         return lista;
@@ -179,7 +200,7 @@ namespace GestaoContratos.Repository
                             ContratoId = int.Parse(consulta["ContratoId"].ToString()),
                             Volume = float.Parse(consulta["Volume"].ToString()),
                             DataPedido = new DateTime(long.Parse(consulta["DataPedido"].ToString())),
-                            Atendido = bool.Parse(consulta["Atendido"].ToString()),
+                            Atendido = (consulta["Atendido"].ToString() == "1"),
                         };
                     }
                 }
@@ -205,12 +226,12 @@ namespace GestaoContratos.Repository
             }
         }
 
-        public static void AtualizarPedido(Pedido pedido)
+        public static void EditarPedido(Pedido pedido)
         {
             string sql = @"UPDATE Pedido 
                 SET Volume = @Volume,
                 DataPedido = @DataPedido,
-                Atendido = @Atendido,
+                Atendido = @Atendido
                 WHERE ContratoId = @ContratoId AND PedidoId = @PedidoId";
 
             using (var conexao = new SQLiteConnection($"DataSource={AppContext.BaseDirectory}\\App_Data\\database.sqlite;Version=3"))
@@ -246,6 +267,5 @@ namespace GestaoContratos.Repository
         }
 
         #endregion
-
     }
 }

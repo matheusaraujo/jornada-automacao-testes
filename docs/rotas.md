@@ -12,10 +12,11 @@
 
 ### Pedidos
 
-| **Verbo**     | **Rota**                        |
-|---------------|----------------------------------------------------|
-| GET           | `api/v1/contratos/{contratoId}/pedidos`            |
-| POST          | `api/v1/contratos/{contratoId}/pedidos`            |
-| GET           | `api/v1/contratos/{contratoId}/pedidos/{pedidoId}` |
-| PUT           | `api/v1/contratos/{contratoId}/pedidos/{pedidoId}` |
-| DELETE        | `api/v1/contratos/{contratoId}/pedidos/{pedidoId}` |
+| **Verbo**     | **Rota**                                                    |
+|---------------|-------------------------------------------------------------|
+| GET           | `api/v1/contratos/{contratoId}/pedidos`                     |
+| POST          | `api/v1/contratos/{contratoId}/pedidos`                     |
+| GET           | `api/v1/contratos/{contratoId}/pedidos/{pedidoId}`          |
+| PUT           | `api/v1/contratos/{contratoId}/pedidos/{pedidoId}`          |
+| DELETE        | `api/v1/contratos/{contratoId}/pedidos/{pedidoId}`          |
+| PATCH         | `api/v1/contratos/{contratoId}/pedidos/{pedidoId}/atendido` |
