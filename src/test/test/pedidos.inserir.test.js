@@ -1,9 +1,9 @@
 import { postPedidos } from './functions/pedidos';
 import { postIniciarTestes } from './functions/init';
-import { postContratos, getContrato } from './functions/contratos';
+import { postContratos, getContratos } from './functions/contratos';
 import { contratoAtivo, contratoInativo } from './mocks/contratos.mock';
 
-describe('Operação inserir pedido', () => {
+describe('Inserir pedido', () => {
 
   beforeAll(async () => {
     await postIniciarTestes();
@@ -12,7 +12,6 @@ describe('Operação inserir pedido', () => {
   });
 
   it('Erro 3001', async () => {
-
     const pedido = {
       "pedidoId": 1,
       "contratoId": 1,
@@ -27,7 +26,6 @@ describe('Operação inserir pedido', () => {
   });
 
   it('Erro 3002', async () => {
-
     const pedido = {
       "pedidoId": 1,
       "contratoId": 1,
@@ -42,7 +40,6 @@ describe('Operação inserir pedido', () => {
   });
 
   it('Erro 3003', async () => {
-
     const pedido = {
       "pedidoId": 1,
       "contratoId": 999,
@@ -57,7 +54,6 @@ describe('Operação inserir pedido', () => {
   });
 
   it('Erro 3004', async () => {
-
     const pedido = {
       "pedidoId": 1,
       "contratoId": 999,
@@ -72,7 +68,6 @@ describe('Operação inserir pedido', () => {
   });
 
   it('Erro 3005', async () => {
-
     const pedido = {
       "pedidoId": 1,
       "contratoId": 2,
@@ -87,7 +82,6 @@ describe('Operação inserir pedido', () => {
   });
 
   it('Erro 3006', async () => {
-
     const pedido = {
       "pedidoId": 1,
       "contratoId": 1,
@@ -102,7 +96,6 @@ describe('Operação inserir pedido', () => {
   });
 
   it('Erro 3007', async () => {
-
     const pedido = {
       "pedidoId": 1,
       "contratoId": 1,
@@ -117,28 +110,24 @@ describe('Operação inserir pedido', () => {
   });
 
   it('Sucesso', async () => {
-
-    const contratoId = 1;
     const pedido = {
       "pedidoId": 1,
-      "contratoId": contratoId,
+      "contratoId": 1,
       "volume": 5,
-      "dataPedido": "2019-06-01T00:00:00.000",
+      "dataPedido": "2019-04-30T00:00:00.000",
       "atendido": false
     };
 
-    const data1 = await getContrato(contratoId);
+    const data1 = await getContratos(1);
     expect(data1.body).toEqual(contratoAtivo);
 
-    const data2 = await postPedidos(pedido.contratoId, pedido);
+    const data2 = await postPedidos(1, pedido);
     expect(data2.status).toBe(201);
     expect(data2.body).toBe(1);
 
+    const data3 = await getContratos(1);
     const contratoAtualizado = Object.assign({}, contratoAtivo, { volumeDisponivel: 95 });
-
-    const data3 = await getContrato(contratoId);
     expect(data3.body).toEqual(contratoAtualizado);
-
   });
 
 });

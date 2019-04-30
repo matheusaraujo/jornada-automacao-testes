@@ -29,14 +29,14 @@
 - `3007` A data do pedido deve estar entre as datas de vigência do contrato.
 - **Ao inserir pedido, o volume disponível do contrato deve ser atualizado.**
 
-### Atualizar Pedido
+### Editar Pedido
 - `3001` O volume do pedido deve ser maior ou igual a 1.
 - `3002` A data do pedido deve ser maior ou igual à data atual.
 - `3005` O contrato do pedido deve estar ativo.
 - `3006` O volume do pedido deve ser menor ou igual ao volume disponível do contrato.
 - `3007` A data do pedido deve estar entre as datas de vigência do contrato.
 - `3008` O pedido deve ter status não atendido para ser editado.
-- **Ao atualizar o pedido, o volume disponível do contrato deve ser atualizado.**
+- **Ao editar o pedido, o volume disponível do contrato deve ser atualizado.**
 - **Para calcular o volume disponível, deve-se considerar o volume atual do pedido.**
 
 ### Atender Pedido
