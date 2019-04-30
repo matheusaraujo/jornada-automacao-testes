@@ -2,14 +2,8 @@
 
 ## Etapas
 
-### 0. O Código
-- `v0.0` Descrever a estrutura do código
-
-### 1. Teste externo ao código
-@TO-DO
-- `v0.8` Criar método para inicializar banco
-- `v0.9` Implementar teste por Jest, deixar problema com hora
-- `v1.0` Resolver problema da hora
+- [0.0 O código](jornada-0)
+- [1.0 Testes externos ao código](jornada-1)
 
 ### 2. Teste direto no código
 - `v1.8` Refatorar código dividindo em camadas

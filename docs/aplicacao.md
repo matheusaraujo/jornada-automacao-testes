@@ -3,3 +3,4 @@
 ![Classes](classes.png)
 
 - [Rotas da API](rotas)
+- [SonarQube](sonar)
