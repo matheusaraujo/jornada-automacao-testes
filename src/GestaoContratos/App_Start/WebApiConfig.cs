@@ -16,6 +16,7 @@ namespace GestaoContratos
 
             var jsonConfig = config.Formatters.JsonFormatter;
             jsonConfig.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            jsonConfig.SerializerSettings.DateFormatString = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'";
 
             config.MapHttpAttributeRoutes();
 

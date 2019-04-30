@@ -2,6 +2,7 @@ import { postPedidos } from './functions/pedidos';
 import { postIniciarTestes } from './functions/init';
 import { postContratos, getContratos } from './functions/contratos';
 import { contratoAtivo, contratoInativo } from './mocks/contratos.mock';
+import { dataAtual, dataAtualAdicionarDias, adicionarDias } from './utils/date';
 
 describe('Inserir pedido', () => {
 
@@ -16,7 +17,7 @@ describe('Inserir pedido', () => {
       "pedidoId": 1,
       "contratoId": 1,
       "volume": 0.5,
-      "dataPedido": "2019-01-01T00:00:00.000",
+      "dataPedido": dataAtual(),
       "atendido": false
     };
 
@@ -30,7 +31,7 @@ describe('Inserir pedido', () => {
       "pedidoId": 1,
       "contratoId": 1,
       "volume": 5,
-      "dataPedido": "2019-01-01T00:00:00.000",
+      "dataPedido": dataAtualAdicionarDias(-1),
       "atendido": false
     };
 
@@ -44,7 +45,7 @@ describe('Inserir pedido', () => {
       "pedidoId": 1,
       "contratoId": 999,
       "volume": 5,
-      "dataPedido": "2019-05-01T00:00:00.000",
+      "dataPedido": dataAtual(),
       "atendido": true
     };
 
@@ -58,7 +59,7 @@ describe('Inserir pedido', () => {
       "pedidoId": 1,
       "contratoId": 999,
       "volume": 5,
-      "dataPedido": "2019-06-01T00:00:00.000",
+      "dataPedido": dataAtual(),
       "atendido": false
     };
 
@@ -72,7 +73,7 @@ describe('Inserir pedido', () => {
       "pedidoId": 1,
       "contratoId": 2,
       "volume": 5,
-      "dataPedido": "2019-06-01T00:00:00.000",
+      "dataPedido": dataAtual(),
       "atendido": false
     };
 
@@ -86,7 +87,7 @@ describe('Inserir pedido', () => {
       "pedidoId": 1,
       "contratoId": 1,
       "volume": 999,
-      "dataPedido": "2019-06-01T00:00:00.000",
+      "dataPedido": dataAtual(),
       "atendido": false
     };
 
@@ -100,7 +101,7 @@ describe('Inserir pedido', () => {
       "pedidoId": 1,
       "contratoId": 1,
       "volume": 5,
-      "dataPedido": "2020-06-01T00:00:00.000",
+      "dataPedido": adicionarDias(contratoAtivo.dataFimVigencia, 1),
       "atendido": false
     };
 
@@ -114,7 +115,7 @@ describe('Inserir pedido', () => {
       "pedidoId": 1,
       "contratoId": 1,
       "volume": 5,
-      "dataPedido": "2019-04-30T00:00:00.000",
+      "dataPedido": dataAtual(),
       "atendido": false
     };
 
