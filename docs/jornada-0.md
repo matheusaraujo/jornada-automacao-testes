@@ -1,5 +1,7 @@
 [Jornada](jornada)
 
-- `v0.0` Descrever a estrutura do código
+```git checkout v0.0```
+@TO-DO Descrever a estrutura do código
+---
 
 [Próximo passo](jornada-1)
