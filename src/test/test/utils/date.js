@@ -5,7 +5,7 @@ export const dataAtual = () => {
 
 export const adicionarDias = (data, dias) => {
   if (Object.prototype.toString.call(data) !== "[object Date]")
-    data = new Date();
+    data = new Date(data);
   const novaData = new Date(data);
   novaData.setDate(data.getDate() + dias);
   return novaData;

@@ -118,18 +118,13 @@
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\BaseApiController.cs" />
-    <Compile Include="Controllers\ContratosController.cs" />
-    <Compile Include="Controllers\PedidosController.cs" />
-    <Compile Include="Controllers\TestesController.cs" />
+    <Compile Include="Controllers\ContratoController.cs" />
+    <Compile Include="Controllers\PedidoController.cs" />
+    <Compile Include="Controllers\TesteController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Contrato.cs" />
-    <Compile Include="Models\Pedido.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repository\Repositorio.cs" />
-    <Compile Include="Utils\EnumExtensions.cs" />
-    <Compile Include="Utils\RegraNegocioException.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\database.sqlite">
@@ -143,7 +138,20 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\GestaoContratos.Dominio\GestaoContratos.Dominio.csproj">
+      <Project>{49b214ce-d3b8-476d-b992-b7df70940141}</Project>
+      <Name>GestaoContratos.Dominio</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GestaoContratos.Processo\GestaoContratos.Processo.csproj">
+      <Project>{80D00F85-FF5D-41EB-BC58-BC9F71C67FB0}</Project>
+      <Name>GestaoContratos.Processo</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GestaoContratos.Util\GestaoContratos.Util.csproj">
+      <Project>{4398872b-b7b3-42c5-a43b-032c074ce163}</Project>
+      <Name>GestaoContratos.Util</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

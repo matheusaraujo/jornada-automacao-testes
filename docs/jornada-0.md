@@ -18,4 +18,4 @@ O namespace `GestaoContratos.Controllers` contém um `Controller` pra cada entid
 
 No namespace `GestaoContratos.Models` estão as estruturas de dados.
 
-![Diagrama de classes](jornada-0/diagrama.png)
+![Diagrama de classes](jornada-0/diagrama-classes.png)

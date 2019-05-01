@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GestaoContratos.Models
+namespace GestaoContratos.Dominio
 {
     public class Contrato
     {

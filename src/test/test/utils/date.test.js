@@ -33,6 +33,9 @@ describe('Testes Utilitários Data', () => {
 
     data = adicionarDias(new Date(2019, 0, 5), -365);
     teste(data, 2018, 0, 5);
+
+    data = adicionarDias(new Date(2019, 4, 31), 1);
+    teste(data, 2019, 5, 1);
   });
 
   it('Data atual adicionar dias', () => {

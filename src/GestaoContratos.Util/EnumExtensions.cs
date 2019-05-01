@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 
-namespace GestaoContratos.Utils
+namespace GestaoContratos.Util
 {
     public static class EnumExtensions
     {

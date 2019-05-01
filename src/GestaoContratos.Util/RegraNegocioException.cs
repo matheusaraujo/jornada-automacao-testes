@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace GestaoContratos.Utils
+namespace GestaoContratos.Util
 {
     public class RegraNegocioException : Exception
     {
@@ -66,5 +66,4 @@ namespace GestaoContratos.Utils
         [Description("status_pedido_invalido_exclusao")]
         StatusPedidoInvalidoExclusao = 3009
     }
-
 }
