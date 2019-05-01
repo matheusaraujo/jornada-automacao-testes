@@ -2,9 +2,8 @@
 
 ---
 
-### 4. Teste com mock manual
-@TO-DO
+## Testes usando mock manual
 
-[Etapa 3](jornada-3)
+---
 
-[Etapa 5](jornada-5)
+[TO-DO]

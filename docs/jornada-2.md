@@ -2,11 +2,28 @@
 
 ---
 
-### 2. Teste direto no código
-- `v1.8` Refatorar código dividindo em camadas
-- `v1.9` Implementar testes da camada de negócio, deixar problema com **[pensar em alguma coisa]**
-- `v2.0` Resolver problema de estado inicial
+## Testes usando ambiente de desenvolvimento
 
-[Etapa 1](jornada-1)
+---
 
-[Etapa 3](jornada-3)
+```
+git checkout v1.8
+```
+
+[TO-DO] `v1.8` Refatorar código dividindo em camadas
+
+---
+
+```
+git checkout v1.9
+```
+
+[TO-DO] `v1.9` Implementar testes da camada de negócio, não implemtar função de estado inicial
+
+---
+
+```
+git checkout v2.0
+```
+
+[TO-DO] `v2.0` Resolver problema de estado inicial

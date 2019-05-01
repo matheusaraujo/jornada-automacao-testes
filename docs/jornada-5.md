@@ -2,9 +2,8 @@
 
 ---
 
-### 5. Teste com framework de mock
-@TO-DO
+## Testes usando mock
 
-[Etapa 4](jornada-4)
+---
 
-[Etapa 6](jornada-6)
+[TO-DO]
