@@ -1,5 +1,7 @@
 [Modelo de negócio](modelo-negocio)
 
+---
+
 ## Regras da API
 - Os objetos enviados no corpo da mensagem devem ter o mesmo id dos parâmetros na rota.
 

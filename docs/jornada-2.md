@@ -1,5 +1,7 @@
 [Jornada](jornada)
 
+---
+
 ### 2. Teste direto no código
 - `v1.8` Refatorar código dividindo em camadas
 - `v1.9` Implementar testes da camada de negócio, deixar problema com **[pensar em alguma coisa]**

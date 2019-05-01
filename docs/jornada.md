@@ -1,8 +1,10 @@
 [Jornada automação de Testes](index)
 
+---
+
 ## Etapas
 
-- [0.0 O código](jornada-0)
+- [0.0 Versão inicial](jornada-0)
 - [1.0 Testes externos ao código](jornada-1)
 - [2.0 Testes usando ambiente de desenvolvimento](jornada-2)
 - [3.0 Testes usando ambiente exclusivo](jornada-3)
