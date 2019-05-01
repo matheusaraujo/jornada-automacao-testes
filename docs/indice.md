@@ -12,4 +12,3 @@
     - [Etapa 4](jornada-4)
     - [Etapa 5](jornada-5)
     - [Etapa 6](jornada-6)
-    - [Próximos passos](proximos-passos)

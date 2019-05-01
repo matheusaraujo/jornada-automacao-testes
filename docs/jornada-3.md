@@ -2,9 +2,8 @@
 
 ---
 
-### 3. Teste com banco criado em tempo de desenvolvimento
-@TO-DO
+## Testes usando ambiente de testes
 
-[Etapa 2](jornada-2)
+---
 
-[Etapa 4](jornada-4)
+[TO-DO]

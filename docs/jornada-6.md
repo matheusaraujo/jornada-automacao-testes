@@ -2,9 +2,8 @@
 
 ---
 
-### 6. Teste GWT
-@TO-DO
+## Testes GWT estruturados
 
-[Etapa 5](jornada-5)
+---
 
-[Próximos passos](proximos-passos)
+[TO-DO]
