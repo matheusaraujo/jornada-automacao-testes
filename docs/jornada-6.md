@@ -1,5 +1,7 @@
 [Jornada](jornada)
 
+---
+
 ### 6. Teste GWT
 @TO-DO
 

@@ -1,5 +1,7 @@
 [Jornada](jornada)
 
+---
+
 ### 4. Teste com mock manual
 @TO-DO
 
