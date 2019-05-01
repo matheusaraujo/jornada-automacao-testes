@@ -1,13 +1,11 @@
-Date.prototype.toString = function () {
-  
-};
-
 export const dataAtual = () => {
   const h = new Date();
   return new Date(h.getFullYear(), h.getMonth(), h.getDate(), 0, 0, 0, 0);
 };
 
 export const adicionarDias = (data, dias) => {
+  if (Object.prototype.toString.call(data) !== "[object Date]")
+    data = new Date();
   const novaData = new Date(data);
   novaData.setDate(data.getDate() + dias);
   return novaData;

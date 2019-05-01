@@ -8,4 +8,4 @@
 
 ---
 
-[Próximo passo](jornada-1)
+[Etapa 1](jornada-1)

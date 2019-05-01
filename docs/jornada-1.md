@@ -21,6 +21,6 @@
 
 ---
 
-[Passo anterior](jornada-0)
+[Etapa 0](jornada-0)
 
-[Próximo passo](jornada-2)
+[Etapa 2](jornada-2)

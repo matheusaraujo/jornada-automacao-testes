@@ -3,6 +3,7 @@ import { pedidoPadrao } from "./mocks/pedidos.mock";
 import { postIniciarTestes } from "./functions/init";
 import { postContratos, putContratos, getContratos } from "./functions/contratos";
 import { contratoAtivo } from "./mocks/contratos.mock";
+import { dataAtualAdicionarDias } from "./utils/date";
 
 describe('Editar pedido', () => {
   beforeAll(async () => {
@@ -21,7 +22,7 @@ describe('Editar pedido', () => {
   });
 
   it('Erro 3002', async () => {
-    const pedidoEditado = Object.assign({}, pedidoPadrao, { dataPedido: "2019-01-01T00:00:00.000" });
+    const pedidoEditado = Object.assign({}, pedidoPadrao, { dataPedido: dataAtualAdicionarDias(-60).toJSON() });
     const data = await putPedidos(1, 1, pedidoEditado);
     expect(data.status).toBe(412);
     expect(data.body.codigoErro).toBe(3002);
@@ -48,7 +49,7 @@ describe('Editar pedido', () => {
   });
 
   it('Erro 3007', async () => {
-    const pedidoEditado = Object.assign({}, pedidoPadrao, { dataPedido: "2020-06-01T00:00:00.000" });
+    const pedidoEditado = Object.assign({}, pedidoPadrao, { dataPedido: dataAtualAdicionarDias(60).toJSON() });
     const data = await putPedidos(1, 1, pedidoEditado);
     expect(data.status).toBe(412);
     expect(data.body.codigoErro).toBe(3007);
