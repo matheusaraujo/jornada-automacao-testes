@@ -1,6 +1,6 @@
-﻿using GestaoContratos.Models;
-using GestaoContratos.Repository;
-using GestaoContratos.Utils;
+﻿using GestaoContratos.Dominio;
+using GestaoContratos.Processo;
+using GestaoContratos.Util;
 using Swashbuckle.Swagger.Annotations;
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ using System.Web.Http;
 namespace GestaoContratos.Controllers
 {
     [RoutePrefix("api/v1")]
-    public class ContratosController : BaseApiController
+    public class ContratoController : BaseApiController
     {
         [HttpGet]       
         [Route("contratos")]        
@@ -22,7 +22,7 @@ namespace GestaoContratos.Controllers
         {
             try
             {
-                var contratos = Repositorio.ObterContratos();
+                var contratos = new ContratoProcesso().ObterContratos();
                 if (contratos == null || contratos.Count == 0)
                     return NotFound();
                 return Ok(contratos);
@@ -42,14 +42,7 @@ namespace GestaoContratos.Controllers
         {
             try
             {
-                if (contrato.DataInicioVigencia.Date > DateTime.Now.Date)
-                    throw new RegraNegocioException(RegraNegocioEnum.DataInicioVigenciaInvalida);
-                else if (contrato.DataFimVigencia < DateTime.Now.Date)
-                    throw new RegraNegocioException(RegraNegocioEnum.DataFimVigenciaInvalida);
-                else if (contrato.VolumeDisponivel < 1)
-                    throw new RegraNegocioException(RegraNegocioEnum.VolumeDisponivelInvalido);
-
-                int contratoId = Repositorio.InserirContrato(contrato);
+                var contratoId = new ContratoProcesso().InserirContrato(contrato);
                 return Created(Request.RequestUri + contratoId.ToString(), contratoId);
             }
             catch (RegraNegocioException e)
@@ -71,7 +64,7 @@ namespace GestaoContratos.Controllers
         {
             try
             {
-                var contrato = Repositorio.ObterContrato(contratoId);
+                var contrato = new ContratoProcesso().ObterContrato(contratoId);
                 if (contrato == null)
                     return NotFound();
                 return Ok(contrato);
@@ -95,25 +88,14 @@ namespace GestaoContratos.Controllers
             {
                 if (contrato.ContratoId != contratoId)
                     return Conflict();
-                    
-                if (contrato.DataInicioVigencia.Date > DateTime.Now.Date)
-                    throw new RegraNegocioException(RegraNegocioEnum.DataInicioVigenciaInvalida);
-                else if (contrato.DataFimVigencia < DateTime.Now.Date)
-                    throw new RegraNegocioException(RegraNegocioEnum.DataFimVigenciaInvalida);
-                else if (contrato.VolumeDisponivel < 1)
-                    throw new RegraNegocioException(RegraNegocioEnum.VolumeDisponivelInvalido);
 
-                var contratoAtual = Repositorio.ObterContrato(contratoId);
-                if (contratoAtual == null)
+                var contratoEditado = new ContratoProcesso().EditarContrato(contrato);
+
+                if (contratoEditado)
+                    return NoContent();
+                else
                     return NotFound();
-
-                var pedidos = Repositorio.ObterPedidos(contratoId);
-                var volumePedidosPendentes = pedidos.Where(p => !p.Atendido).Sum(p => p.Volume);
-                if (contrato.VolumeDisponivel < volumePedidosPendentes)
-                    throw new RegraNegocioException(RegraNegocioEnum.VolumeDisponivelInvalidoEdicao);
-
-                Repositorio.EditarContrato(contrato);
-                return NoContent();
+                
             }
             catch (RegraNegocioException e)
             {
@@ -134,16 +116,11 @@ namespace GestaoContratos.Controllers
         {
             try
             {
-                var contratoAtual = Repositorio.ObterContrato(contratoId);
-                if (contratoAtual == null)
+                var contratoDeletado = new ContratoProcesso().DeletarContrato(contratoId);
+                if (contratoDeletado)
+                    return NoContent();
+                else
                     return NotFound();
-
-                var pedidos = Repositorio.ObterPedidos(contratoId);
-                if (pedidos != null && pedidos.Count > 0)
-                    throw new RegraNegocioException(RegraNegocioEnum.ContratoPossuiPedidos);
-
-                Repositorio.DeletarContrato(contratoId);
-                return NoContent();
             }
             catch (RegraNegocioException e)
             {

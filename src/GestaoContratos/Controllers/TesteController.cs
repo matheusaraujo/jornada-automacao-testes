@@ -1,4 +1,4 @@
-﻿using GestaoContratos.Repository;
+﻿using GestaoContratos.Processo;
 using Swashbuckle.Swagger.Annotations;
 using System;
 using System.Net;
@@ -7,7 +7,7 @@ using System.Web.Http;
 namespace GestaoContratos.Controllers
 {
     [RoutePrefix("api/v1")]
-    public class TestesController : BaseApiController
+    public class TesteController : BaseApiController
     {
         [HttpPost]
         [Route("testes")]
@@ -17,7 +17,7 @@ namespace GestaoContratos.Controllers
         {
             try
             {
-                Repositorio.IniciarTestes();
+                new TesteProcesso().IniciarTestes();
                 return NoContent();
             }
             catch (Exception e)
