@@ -9,6 +9,30 @@ namespace GestaoContratos.Teste
     [TestClass]
     public class TesteInserirPedido
     {
+        [TestInitialize]
+        public void IniciarTestes()
+        {
+            var testeProcesso = new TesteProcesso();
+            testeProcesso.IniciarTestes();
+            var contratoProcesso = new ContratoProcesso();
+            contratoProcesso.InserirContrato(new Contrato()
+            {
+                ContratoId = 1,
+                VolumeDisponivel = 100,
+                DataInicioVigencia = ExtensaoDateTime.DataInicioMesAtual(),
+                DataFimVigencia = ExtensaoDateTime.DataFimMesAtual(),
+                Ativo = true
+            });
+            contratoProcesso.InserirContrato(new Contrato()
+            {
+                ContratoId = 2,
+                VolumeDisponivel = 100,
+                DataInicioVigencia = ExtensaoDateTime.DataInicioMesAtual(),
+                DataFimVigencia = ExtensaoDateTime.DataFimMesAtual(),
+                Ativo = false
+            });
+        }
+
         [TestMethod]
         [Description("O volume do pedido deve ser maior ou igual a 1.")]
         [ExpectedExceptionMessage(typeof(RegraNegocioException), ConstantesRegraNegocio.VOLUME_PEDIDO_INVALIDO)]

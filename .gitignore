@@ -332,3 +332,4 @@ ASALocalRun/
 # Sonarqube
 /src/.sonarqube
 /src/.axoCover/runs
+/src/opencover.xml
