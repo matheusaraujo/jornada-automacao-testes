@@ -331,3 +331,4 @@ ASALocalRun/
 
 # Sonarqube
 /src/.sonarqube
+/src/.axoCover/runs

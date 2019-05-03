@@ -1,11 +1,12 @@
 ﻿using GestaoContratos.Dominio;
+using GestaoContratos.Repositorio.Base;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 
 namespace GestaoContratos.Repositorio
 {
-    public class PedidoRepositorio
+    public class PedidoRepositorio : RepositorioBase
     {
         public IList<Pedido> ObterPedidos(int contratoId)
         {
@@ -15,7 +16,7 @@ namespace GestaoContratos.Repositorio
                 WHERE ContratoId = @ContratoId
                 ORDER BY Atendido, DataPedido, Volume DESC";
 
-            using (var conexao = new SQLiteConnection($"DataSource={AppContext.BaseDirectory}\\App_Data\\database.sqlite;Version=3"))
+            using (var conexao = CriarConexao())
             {
                 using (var comando = new SQLiteCommand(sql, conexao))
                 {
@@ -43,7 +44,7 @@ namespace GestaoContratos.Repositorio
         public Pedido ObterPedido(int contratoId, int pedidoId)
         {
             string sql = "SELECT * FROM Pedido WHERE ContratoId = @ContratoId AND PedidoId = @PedidoId";
-            using (var conexao = new SQLiteConnection($"DataSource={AppContext.BaseDirectory}\\App_Data\\database.sqlite;Version=3"))
+            using (var conexao = CriarConexao())
             {
                 using (var comando = new SQLiteCommand(sql, conexao))
                 {
@@ -74,7 +75,7 @@ namespace GestaoContratos.Repositorio
             string sql = @"INSERT INTO Pedido (ContratoId, Volume, DataPedido, Atendido)
                     VALUES (@ContratoId, @Volume, @DataPedido, @Atendido); SELECT last_insert_rowid();";
 
-            using (var conexao = new SQLiteConnection($"DataSource={AppContext.BaseDirectory}\\App_Data\\database.sqlite;Version=3"))
+            using (var conexao = CriarConexao())
             {
                 using (var comando = new SQLiteCommand(sql, conexao))
                 {
@@ -96,7 +97,7 @@ namespace GestaoContratos.Repositorio
                 Atendido = @Atendido
                 WHERE ContratoId = @ContratoId AND PedidoId = @PedidoId";
 
-            using (var conexao = new SQLiteConnection($"DataSource={AppContext.BaseDirectory}\\App_Data\\database.sqlite;Version=3"))
+            using (var conexao = CriarConexao())
             {
                 using (var comando = new SQLiteCommand(sql, conexao))
                 {
@@ -115,7 +116,7 @@ namespace GestaoContratos.Repositorio
         {
             string sql = @"DELETE FROM Pedido WHERE ContratoId = @ContratoId AND ContratoId = @ContratoId";
 
-            using (var conexao = new SQLiteConnection($"DataSource={AppContext.BaseDirectory}\\App_Data\\database.sqlite;Version=3"))
+            using (var conexao = CriarConexao())
             {
                 using (var comando = new SQLiteCommand(sql, conexao))
                 {

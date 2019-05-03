@@ -6,7 +6,7 @@
     "jest": "^24.7.1"
   },
   "scripts": {
-    "test": "jest --maxWorkers=1 --verbose"
+    "test": "jest --runInBand --verbose"
   },
   "dependencies": {
     "whatwg-fetch": "^3.0.0"

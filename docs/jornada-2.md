@@ -1,3 +1,5 @@
+[ _DRAFT_ ]
+
 [Jornada](jornada)
 
 ---
@@ -10,7 +12,7 @@
 git checkout v1.8
 ```
 
-[TO-DO] `v1.8` Refatorar código dividindo em camadas
+`v1.8` Refatorar código dividindo em camadas
 
 Alterações:
 - Criados quatro novos projetos:
@@ -32,7 +34,10 @@ Alterações:
 git checkout v1.9
 ```
 
-[TO-DO] `v1.9` Implementar testes da camada de negócio, não implemtar função de estado inicial
+- Criada a classe `RepositorioBase`
+- Arquivo de banco de dados movido para a pasta do Repositório
+- Criada a variável de conexão com o banco
+- Criados os mesmos testes do front agora direto nas classes de processo
 
 ---
 

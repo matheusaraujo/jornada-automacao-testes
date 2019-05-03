@@ -2,7 +2,7 @@ import { postPedidos } from './functions/pedidos';
 import { postIniciarTestes } from './functions/init';
 import { postContratos, getContratos } from './functions/contratos';
 import { contratoAtivo, contratoInativo } from './mocks/contratos.mock';
-import { dataAtual, dataAtualAdicionarDias, adicionarDias } from './utils/date';
+import { dataAtual, dataAtualAdicionarDias, adicionarDias, dataFimMesAtual } from './utils/date';
 
 describe('Inserir pedido', () => {
 
@@ -12,7 +12,7 @@ describe('Inserir pedido', () => {
     await postContratos(contratoInativo);
   });
 
-  it('Erro 3001', async () => {
+  it('Erro 3001 - O volume do pedido deve ser maior ou igual a 1.', async () => {
     const pedido = {
       "pedidoId": 1,
       "contratoId": 1,
@@ -26,7 +26,7 @@ describe('Inserir pedido', () => {
     expect(data.body.codigoErro).toBe(3001);
   });
 
-  it('Erro 3002', async () => {
+  it('Erro 3002 - A data do pedido deve ser maior ou igual à data atual.', async () => {
     const pedido = {
       "pedidoId": 1,
       "contratoId": 1,
@@ -40,7 +40,7 @@ describe('Inserir pedido', () => {
     expect(data.body.codigoErro).toBe(3002);
   });
 
-  it('Erro 3003', async () => {
+  it('Erro 3003 - O pedido deve ser criado com status não atendido.', async () => {
     const pedido = {
       "pedidoId": 1,
       "contratoId": 999,
@@ -54,7 +54,7 @@ describe('Inserir pedido', () => {
     expect(data.body.codigoErro).toBe(3003);
   });
 
-  it('Erro 3004', async () => {
+  it('Erro 3004 - O pedido deve ser criado para um contrato existente.', async () => {
     const pedido = {
       "pedidoId": 1,
       "contratoId": 999,
@@ -68,7 +68,7 @@ describe('Inserir pedido', () => {
     expect(data.body.codigoErro).toBe(3004);
   });
 
-  it('Erro 3005', async () => {
+  it('Erro 3005 - O contrato do pedido deve estar ativo', async () => {
     const pedido = {
       "pedidoId": 1,
       "contratoId": 2,
@@ -82,7 +82,7 @@ describe('Inserir pedido', () => {
     expect(data.body.codigoErro).toBe(3005);
   });
 
-  it('Erro 3006', async () => {
+  it('Erro 3006 - O volume do pedido deve ser menor ou igual ao volume disponível do contrato.', async () => {
     const pedido = {
       "pedidoId": 1,
       "contratoId": 1,
@@ -96,12 +96,12 @@ describe('Inserir pedido', () => {
     expect(data.body.codigoErro).toBe(3006);
   });
 
-  it('Erro 3007', async () => {
+  it('Erro 3007 - A data do pedido deve estar entre as datas de vigência do contrato.', async () => {
     const pedido = {
       "pedidoId": 1,
       "contratoId": 1,
-      "volume": 5,
-      "dataPedido": adicionarDias(contratoAtivo.dataFimVigencia, 1),
+      "volume": 5,      
+      "dataPedido": adicionarDias(dataFimMesAtual(), 1),
       "atendido": false
     };
 
@@ -110,7 +110,7 @@ describe('Inserir pedido', () => {
     expect(data.body.codigoErro).toBe(3007);
   });
 
-  it('Sucesso', async () => {
+  it('Sucesso - Pedido criado com sucesso.', async () => {
     const pedido = {
       "pedidoId": 1,
       "contratoId": 1,

@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EnumExtensions.cs" />
+    <Compile Include="ExtensaoDateTime.cs" />
     <Compile Include="RegraNegocioException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

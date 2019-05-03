@@ -6,7 +6,7 @@
 |-----------------------|----------|----------|
 | Bugs                  | 0        | 0        |
 | Vulnerabilities       | 0        | 0        |
-| Code Smells           | 0        | 0        |
+| Code Smells           | 4        | 4        |
 | Coverage              | 0.0%     | 0.0%     |
 | Lines to Cover        | 287      | 299      |
 | Duplications          | 0.0%     | 0.0%     |
