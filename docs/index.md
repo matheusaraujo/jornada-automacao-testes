@@ -1,3 +1,5 @@
+[ _DRAFT_ ]
+
 ## Sobre
 Este projeto tem como objetivo mostrar uma jornada para implantar de forma eficaz testes automatizados em código legado.
 
