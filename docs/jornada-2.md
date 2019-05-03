@@ -45,4 +45,5 @@ git checkout v1.9
 git checkout v2.0
 ```
 
-[TO-DO] `v2.0` Resolver problema de estado inicial
+- Resolvido `TestInitialeze` para Inserir Pedido
+- Sonar
