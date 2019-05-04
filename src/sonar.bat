@@ -8,6 +8,6 @@ MSBuild.exe /t:Rebuild
 "%LOCALAPPDATA%\Apps\OpenCover\OpenCover.Console.exe"^
     -output:"%CD%\opencover.xml"^
     -register:user -target:"vstest.console.exe"^
-    -targetargs:"GestaoContratos.Teste\bin\Debug\GestaoContratos.Teste.dll"
+    -targetargs:"GestaoContratos.Teste.Integracao\bin\Debug\GestaoContratos.Teste.Integracao.dll GestaoContratos.Teste.Processo\bin\Debug\GestaoContratos.Teste.Processo.dll"
 SonarScanner.MSBuild.exe end
 pause

@@ -1,4 +1,5 @@
 ﻿using GestaoContratos.Dominio.Dto;
+using GestaoContratos.Dominio.Entidade;
 using GestaoContratos.Interface.Processo;
 using GestaoContratos.Interface.Repositorio;
 using GestaoContratos.Util;
@@ -13,7 +14,7 @@ namespace GestaoContratos.Processo
         private readonly IPedidoRepositorio _pedidoRepositorio;
         private readonly IContratoRepositorio _contratoRepositorio;
 
-        public PedidoProcesso(IPedidoRepositorio pedidoRepositorio, IContratoRepositorio contratoRepositorio)
+        public PedidoProcesso(IContratoRepositorio contratoRepositorio, IPedidoRepositorio pedidoRepositorio)
         {
             _pedidoRepositorio = pedidoRepositorio;
             _contratoRepositorio = contratoRepositorio;
@@ -29,31 +30,66 @@ namespace GestaoContratos.Processo
             return _pedidoRepositorio.ObterPedido(contratoId, pedidoId).Converter();
         }
 
-        public int InserirPedido(PedidoDto pedidoDto)
+        public void ValidarPedido(Pedido pedido, Contrato contrato, DateTime hoje)
         {
-            var pedido = pedidoDto.Converter();
-
             if (pedido.Volume < 1)
                 throw new RegraNegocioException(TipoRegraNegocio.VolumePedidoInvalido);
-            else if (pedido.DataPedido < DateTime.Now.Date)
+            else if (pedido.DataPedido < hoje)
                 throw new RegraNegocioException(TipoRegraNegocio.DataPedidoInvalida);
-            else if (pedido.Atendido)
-                throw new RegraNegocioException(TipoRegraNegocio.StatusPedidoInvalidoInsercao);
-
-            var contrato = _contratoRepositorio.ObterContrato(pedido.ContratoId);
-            if (contrato == null)
+            else if (contrato == null)
                 throw new RegraNegocioException(TipoRegraNegocio.ContratoInexistente);
             else if (!contrato.Ativo)
                 throw new RegraNegocioException(TipoRegraNegocio.ContratoInativo);
-            else if (contrato.VolumeDisponivel < pedido.Volume)
-                throw new RegraNegocioException(TipoRegraNegocio.VolumeContratoInsuficiente);
             else if (contrato.DataInicioVigencia.Date > pedido.DataPedido.Date)
                 throw new RegraNegocioException(TipoRegraNegocio.DataPedidoForaVigenciaContrato);
             else if (contrato.DataFimVigencia.Date < pedido.DataPedido.Date)
                 throw new RegraNegocioException(TipoRegraNegocio.DataPedidoForaVigenciaContrato);
+        }
+
+        public void ValidarPedidoInsercao(Pedido pedido, Contrato contrato, DateTime hoje)
+        {
+            ValidarPedido(pedido, contrato, hoje);
+            if (pedido.Atendido)
+                throw new RegraNegocioException(TipoRegraNegocio.StatusPedidoInvalidoInsercao);
+            else if (contrato.VolumeDisponivel < pedido.Volume)
+                throw new RegraNegocioException(TipoRegraNegocio.VolumeContratoInsuficiente);
+        }
+
+        public void ValidarPedidoEdicao(Pedido pedido, Contrato contrato, Pedido pedidoAtual, DateTime hoje)
+        {
+            ValidarPedido(pedido, contrato, hoje);            
+            if (pedidoAtual.Atendido)
+                throw new RegraNegocioException(TipoRegraNegocio.StatusPedidoInvalidoEdicao);
+            else if (pedido.Volume > contrato.VolumeDisponivel + pedidoAtual.Volume)
+                throw new RegraNegocioException(TipoRegraNegocio.VolumeContratoInsuficiente);
+        }
+
+        public void ValidarPedidoDelecao(Pedido pedido, Contrato contrato)
+        {
+            if (pedido.Atendido)
+                throw new RegraNegocioException(TipoRegraNegocio.StatusPedidoInvalidoExclusao);
+            else if (!contrato.Ativo)
+                throw new RegraNegocioException(TipoRegraNegocio.ContratoInativo);
+        }
+
+        public void ValidarPedidoAtendimento(Pedido pedido, Contrato contrato)
+        {
+            if (pedido.Atendido)
+                throw new RegraNegocioException(TipoRegraNegocio.StatusPedidoInvalidoEdicao);
+                        
+            if (contrato == null)
+                throw new RegraNegocioException(TipoRegraNegocio.ContratoInexistente);
+            else if (!contrato.Ativo)
+                throw new RegraNegocioException(TipoRegraNegocio.ContratoInativo);
+        }
+
+        public int InserirPedido(PedidoDto pedidoDto)
+        {
+            var pedido = pedidoDto.Converter();
+            var contrato = _contratoRepositorio.ObterContrato(pedido.ContratoId);
+            ValidarPedidoInsercao(pedido, contrato, DateTime.Now.Date);
 
             int pedidoId = _pedidoRepositorio.InserirPedido(pedido);
-
             contrato.VolumeDisponivel -= pedido.Volume;
             _contratoRepositorio.EditarVolumeContrato(contrato);
 
@@ -64,30 +100,12 @@ namespace GestaoContratos.Processo
         {
 
             var pedido = pedidoDto.Converter();
-
-            if (pedido.Volume < 1)
-                throw new RegraNegocioException(TipoRegraNegocio.VolumePedidoInvalido);
-            else if (pedido.DataPedido < DateTime.Now.Date)
-                throw new RegraNegocioException(TipoRegraNegocio.DataPedidoInvalida);
-
             var contrato = _contratoRepositorio.ObterContrato(pedido.ContratoId);
-            if (contrato == null)
-                throw new RegraNegocioException(TipoRegraNegocio.ContratoInexistente);
-            else if (!contrato.Ativo)
-                throw new RegraNegocioException(TipoRegraNegocio.ContratoInativo);
-            else if (contrato.DataInicioVigencia.Date > pedido.DataPedido.Date)
-                throw new RegraNegocioException(TipoRegraNegocio.DataPedidoForaVigenciaContrato);
-            else if (contrato.DataFimVigencia.Date < pedido.DataPedido.Date)
-                throw new RegraNegocioException(TipoRegraNegocio.DataPedidoForaVigenciaContrato);
-
             var pedidoAtual = _pedidoRepositorio.ObterPedido(pedido.ContratoId, pedido.PedidoId);
-
             if (pedidoAtual == null)
                 return false;
-            else if (pedidoAtual.Atendido)
-                throw new RegraNegocioException(TipoRegraNegocio.StatusPedidoInvalidoEdicao);
-            else if (pedido.Volume > contrato.VolumeDisponivel + pedidoAtual.Volume)
-                throw new RegraNegocioException(TipoRegraNegocio.VolumeContratoInsuficiente);
+
+            ValidarPedidoEdicao(pedido, contrato, pedidoAtual, DateTime.Now.Date);
 
             _pedidoRepositorio.EditarPedido(pedido);
             contrato.VolumeDisponivel = contrato.VolumeDisponivel + pedidoAtual.Volume - pedido.Volume;
@@ -95,20 +113,16 @@ namespace GestaoContratos.Processo
 
             return true;
         }
-
+        
         public bool DeletarPedido(int contratoId, int pedidoId)
         {
             var pedido = _pedidoRepositorio.ObterPedido(contratoId, pedidoId);
-
+            var contrato = _contratoRepositorio.ObterContrato(contratoId);
             if (pedido == null)
                 return false;
-            else if (pedido.Atendido)
-                throw new RegraNegocioException(TipoRegraNegocio.StatusPedidoInvalidoExclusao);
 
-            var contrato = _contratoRepositorio.ObterContrato(contratoId);
-            if (!contrato.Ativo)
-                throw new RegraNegocioException(TipoRegraNegocio.ContratoInativo);
-
+            ValidarPedidoDelecao(pedido, contrato);
+            
             _pedidoRepositorio.DeletarPedido(contratoId, pedidoId);
 
             contrato.VolumeDisponivel += pedido.Volume;
@@ -120,16 +134,11 @@ namespace GestaoContratos.Processo
         public bool AtenderPedido(int contratoId, int pedidoId)
         {
             var pedido = _pedidoRepositorio.ObterPedido(contratoId, pedidoId);
+            var contrato = _contratoRepositorio.ObterContrato(contratoId);
             if (pedido == null)
                 return false;
-            else if (pedido.Atendido)
-                throw new RegraNegocioException(TipoRegraNegocio.StatusPedidoInvalidoEdicao);
 
-            var contrato = _contratoRepositorio.ObterContrato(contratoId);
-            if (contrato == null)
-                throw new RegraNegocioException(TipoRegraNegocio.ContratoInexistente);
-            else if (!contrato.Ativo)
-                throw new RegraNegocioException(TipoRegraNegocio.ContratoInativo);
+            ValidarPedidoAtendimento(pedido, contrato);
 
             pedido.Atendido = true;
             _pedidoRepositorio.EditarPedido(pedido);

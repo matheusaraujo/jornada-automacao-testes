@@ -35,10 +35,5 @@ namespace GestaoContratos.Processo.Mapeador
         {
             return entidades.ToList().ConvertAll(e => e.Converter());
         }
-
-        public static IList<Contrato> Converter(this IList<ContratoDto> entidades)
-        {
-            return entidades.ToList().ConvertAll(e => e.Converter());
-        }
     }
 }
