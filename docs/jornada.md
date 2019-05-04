@@ -10,4 +10,3 @@
 - [v3.0 Testes usando ambiente de testes](jornada-3)
 - [v4.0 Testes usando mock manual](jornada-4)
 - [v5.0 Testes usando mock](jornada-5)
-- [v6.0 Testes GWT estruturados](jornada-6)

@@ -1,30 +1,13 @@
-﻿using System;
-using System.Configuration;
+﻿using GestaoContratos.Util;
 using System.Data.SQLite;
 
 namespace GestaoContratos.Repositorio.Base
 {
     public abstract class RepositorioBase
     {
-        private static string Diretorio
-        {
-            get
-            {
-                return AppContext.BaseDirectory;
-            }
-        }
-
-        private static string CaminhoBancoDados
-        {
-            get
-            {
-                return ConfigurationManager.AppSettings["caminhoBancoDados"];
-            }
-        }
-
         public static SQLiteConnection CriarConexao()
         {
-            return new SQLiteConnection(string.Format("Data Source={0}{1};Version=3;", Diretorio, CaminhoBancoDados));
+            return new SQLiteConnection(string.Format("Data Source={0}{1};Version=3;", Configuracao.Diretorio, Configuracao.CaminhoBancoDados));
         }
     }
 }
