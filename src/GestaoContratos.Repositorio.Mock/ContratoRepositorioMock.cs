@@ -8,36 +8,35 @@ namespace GestaoContratos.Repositorio.Mock
     {
         public void DeletarContrato(int contratoId)
         {
-            BancoMemoria.contratos.RemoveAll(c => c.ContratoId == contratoId);
+            BancoMemoria.Contratos.RemoveAll(c => c.ContratoId == contratoId);
         }
 
         public void EditarContrato(Contrato contrato)
         {
-            BancoMemoria.contratos.RemoveAll(c => c.ContratoId == contrato.ContratoId);
-            BancoMemoria.contratos.Add(contrato);
+            BancoMemoria.Contratos.RemoveAll(c => c.ContratoId == contrato.ContratoId);
+            BancoMemoria.Contratos.Add(contrato);
         }
 
         public void EditarVolumeContrato(Contrato contrato)
-        {
-            BancoMemoria.contratos.RemoveAll(c => c.ContratoId == contrato.ContratoId);
-            BancoMemoria.contratos.Add(contrato);
+        {   
+            EditarContrato(contrato);
         }
 
         public int InserirContrato(Contrato contrato)
         {
-            contrato.ContratoId = BancoMemoria.contratos.Count + 1;
-            BancoMemoria.contratos.Add(contrato);
+            contrato.ContratoId = BancoMemoria.Contratos.Count + 1;
+            BancoMemoria.Contratos.Add(contrato);
             return contrato.ContratoId;
         }
 
         public Contrato ObterContrato(int contratoId)
         {
-            return BancoMemoria.contratos.Find(c => c.ContratoId == contratoId);
+            return BancoMemoria.Contratos.Find(c => c.ContratoId == contratoId);
         }
 
         public IList<Contrato> ObterContratos()
         {
-            return BancoMemoria.contratos;
+            return BancoMemoria.Contratos;
         }
     }
 }

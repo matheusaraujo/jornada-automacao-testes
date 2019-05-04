@@ -26,8 +26,8 @@ git checkout v3.9
 git checkout v4.0
 ```
 
-- 
-- 
+- Parâmetro para teste de integração
+- Exclusão de arquivos no sonar
 ---
 
 [TO-DO]
