@@ -1,4 +1,4 @@
-﻿using GestaoContratos.Dominio;
+﻿using GestaoContratos.Dominio.Entidade;
 using System;
 using System.Data.SQLite;
 

@@ -1,5 +1,5 @@
-﻿using GestaoContratos.Dominio;
-using GestaoContratos.Processo;
+﻿using GestaoContratos.Dominio.Dto;
+using GestaoContratos.Interface.Processo;
 using GestaoContratos.Teste.Util;
 using GestaoContratos.Util;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -9,20 +9,26 @@ namespace GestaoContratos.Teste
     [TestClass]
     public class TesteDeletarContrato
     {
+        private ITesteProcesso _testeProcesso;
+        private IContratoProcesso _contratoProcesso;
+        private IPedidoProcesso _pedidoProcesso;
 
         [TestInitialize]
         public void IniciarTestes()
         {
-            var testeProcesso = new TesteProcesso();
-            testeProcesso.IniciarTestes();
+            InjetorDependencias.InjetorDependencias.Iniciar();
+
+            _testeProcesso = InjetorDependencias.InjetorDependencias.ObterInstancia<ITesteProcesso>();
+            _contratoProcesso = InjetorDependencias.InjetorDependencias.ObterInstancia<IContratoProcesso>();
+            _pedidoProcesso = InjetorDependencias.InjetorDependencias.ObterInstancia<IPedidoProcesso>();
+            
+            _testeProcesso.IniciarTestes();
         }
 
         [TestMethod]
         public void Teste_DeletarContrato_SemPedidos_Sucesso()
         {
-            var contratoProcesso = new ContratoProcesso();
-
-            contratoProcesso.InserirContrato(new Contrato()
+            _contratoProcesso.InserirContrato(new ContratoDto()
             {
                 ContratoId = 1,
                 VolumeDisponivel = 100,
@@ -31,12 +37,12 @@ namespace GestaoContratos.Teste
                 Ativo = true
             });
 
-            var contratos = contratoProcesso.ObterContratos();
+            var contratos = _contratoProcesso.ObterContratos();
             Assert.AreEqual(1, contratos.Count);
 
-            contratoProcesso.DeletarContrato(1);
+            _contratoProcesso.DeletarContrato(1);
 
-            contratos = contratoProcesso.ObterContratos();
+            contratos = _contratoProcesso.ObterContratos();
             Assert.IsTrue(contratos == null || contratos.Count == 0);
         }
 
@@ -44,10 +50,7 @@ namespace GestaoContratos.Teste
         [ExpectedExceptionMessage(typeof(RegraNegocioException), ConstantesRegraNegocio.CONTRATO_POSSUI_PEDIDOS)]
         public void Teste_DeletarContrato_ComPedidos_Erro()
         {
-            var contratoProcesso = new ContratoProcesso();
-            var pedidoProcesso = new PedidoProcesso();
-
-            contratoProcesso.InserirContrato(new Contrato()
+            _contratoProcesso.InserirContrato(new ContratoDto()
             {
                 ContratoId = 1,
                 VolumeDisponivel = 100,
@@ -56,7 +59,7 @@ namespace GestaoContratos.Teste
                 Ativo = true
             });
 
-            pedidoProcesso.InserirPedido(new Pedido()
+            _pedidoProcesso.InserirPedido(new PedidoDto()
             {
                 PedidoId = 1,
                 ContratoId = 1,
@@ -65,10 +68,10 @@ namespace GestaoContratos.Teste
                 Atendido = false
             });
 
-            var contratos = contratoProcesso.ObterContratos();
+            var contratos = _contratoProcesso.ObterContratos();
             Assert.AreEqual(1, contratos.Count);
 
-            contratoProcesso.DeletarContrato(1);
+            _contratoProcesso.DeletarContrato(1);
 
         }
     }

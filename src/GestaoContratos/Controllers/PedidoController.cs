@@ -1,5 +1,5 @@
-﻿using GestaoContratos.Dominio;
-using GestaoContratos.Processo;
+﻿using GestaoContratos.Dominio.Dto;
+using GestaoContratos.Interface.Processo;
 using GestaoContratos.Util;
 using Swashbuckle.Swagger.Annotations;
 using System;
@@ -12,16 +12,23 @@ namespace GestaoContratos.Controllers
     [RoutePrefix("api/v1")]
     public class PedidoController : BaseApiController
     {
+        private readonly IPedidoProcesso _pedidoProcesso;
+
+        public PedidoController(IPedidoProcesso pedidoProcesso)
+        {
+            _pedidoProcesso = pedidoProcesso;
+        }
+
         [HttpGet]
         [Route("contratos/{contratoId}/pedidos")]
-        [SwaggerResponse(HttpStatusCode.OK, "Pedidos", typeof(IList<Pedido>))]
+        [SwaggerResponse(HttpStatusCode.OK, "Pedidos", typeof(IList<PedidoDto>))]
         [SwaggerResponse(HttpStatusCode.NotFound, "Não encontrado")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro interno")]        
         public IHttpActionResult ObterPedidos(int contratoId)
         {
             try
             {
-                var pedidos = new PedidoProcesso().ObterPedidos(contratoId);
+                var pedidos = _pedidoProcesso.ObterPedidos(contratoId);
                 if (pedidos == null || pedidos.Count == 0)
                     return NotFound();
                 return Ok(pedidos);
@@ -34,14 +41,14 @@ namespace GestaoContratos.Controllers
 
         [HttpGet]
         [Route("contratos/{contratoId}/pedidos/{pedidoId}")]
-        [SwaggerResponse(HttpStatusCode.OK, "Pedido", typeof(Pedido))]
+        [SwaggerResponse(HttpStatusCode.OK, "Pedido", typeof(PedidoDto))]
         [SwaggerResponse(HttpStatusCode.NotFound, "Não encontrado")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro interno")]
         public IHttpActionResult ObterPedido(int contratoId, int pedidoId)
         {
             try
             {
-                var pedido = new PedidoProcesso().ObterPedido(contratoId, pedidoId);
+                var pedido = _pedidoProcesso.ObterPedido(contratoId, pedidoId);
                 if (pedido == null)
                     return NotFound();
                 return Ok(pedido);
@@ -58,14 +65,14 @@ namespace GestaoContratos.Controllers
         [SwaggerResponse(HttpStatusCode.Conflict, "Conflito")]
         [SwaggerResponse(HttpStatusCode.PreconditionFailed, "Erro na requisição")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro interno")]
-        public IHttpActionResult InserirPedido(int contratoId, [FromBody] Pedido pedido)
+        public IHttpActionResult InserirPedido(int contratoId, [FromBody] PedidoDto pedido)
         {
             try
             {
                 if (pedido.ContratoId != contratoId)
                     return Conflict();
 
-                var pedidoId = new PedidoProcesso().InserirPedido(pedido);
+                var pedidoId = _pedidoProcesso.InserirPedido(pedido);
 
                 return Created(Request.RequestUri + pedidoId.ToString(), pedidoId);
             }
@@ -86,7 +93,7 @@ namespace GestaoContratos.Controllers
         [SwaggerResponse(HttpStatusCode.Conflict, "Conflito")]
         [SwaggerResponse(HttpStatusCode.PreconditionFailed, "Erro na requisição")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro interno")]
-        public IHttpActionResult EditarPedido(int contratoId, int pedidoId, [FromBody] Pedido pedido)
+        public IHttpActionResult EditarPedido(int contratoId, int pedidoId, [FromBody] PedidoDto pedido)
         {
             try
             {
@@ -95,7 +102,7 @@ namespace GestaoContratos.Controllers
                 else if (pedido.PedidoId != pedidoId)
                     return Conflict();
 
-                var pedidoEditado = new PedidoProcesso().EditarPedido(pedido);
+                var pedidoEditado = _pedidoProcesso.EditarPedido(pedido);
                 if (pedidoEditado)
                     return NoContent();
                 else
@@ -121,7 +128,7 @@ namespace GestaoContratos.Controllers
         {
             try
             {
-                var pedidoDeletado = new PedidoProcesso().DeletarPedido(contratoId, pedidoId);
+                var pedidoDeletado = _pedidoProcesso.DeletarPedido(contratoId, pedidoId);
                 if (pedidoDeletado)
                     return NoContent();
                 else
@@ -147,7 +154,7 @@ namespace GestaoContratos.Controllers
         {
             try
             {
-                var pedidoAtendido = new PedidoProcesso().AtenderPedido(contratoId, pedidoId);
+                var pedidoAtendido = _pedidoProcesso.AtenderPedido(contratoId, pedidoId);
                 if (pedidoAtendido)
                     return NoContent();
                 else

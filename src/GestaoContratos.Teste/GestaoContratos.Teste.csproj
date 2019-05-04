@@ -83,9 +83,17 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GestaoContratos.Dominio\GestaoContratos.Dominio.csproj">
-      <Project>{49B214CE-D3B8-476D-B992-B7DF70940141}</Project>
-      <Name>GestaoContratos.Dominio</Name>
+    <ProjectReference Include="..\GestaoContratos.Dominio.Dto\GestaoContratos.Dominio.Dto.csproj">
+      <Project>{2A4AC554-3BB4-40B6-AA10-0526CBBAF284}</Project>
+      <Name>GestaoContratos.Dominio.Dto</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GestaoContratos.InjetorDependencias\GestaoContratos.InjetorDependencias.csproj">
+      <Project>{9BC7178D-CE77-4D03-8630-F3592D131BBC}</Project>
+      <Name>GestaoContratos.InjetorDependencias</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GestaoContratos.Interface.Processo\GestaoContratos.Interface.Processo.csproj">
+      <Project>{604A35BC-FB04-4F3A-BC49-ACA15CAAF5E7}</Project>
+      <Name>GestaoContratos.Interface.Processo</Name>
     </ProjectReference>
     <ProjectReference Include="..\GestaoContratos.Processo\GestaoContratos.Processo.csproj">
       <Project>{80D00F85-FF5D-41EB-BC58-BC9F71C67FB0}</Project>

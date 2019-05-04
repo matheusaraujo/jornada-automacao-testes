@@ -1,8 +1,9 @@
-﻿using GestaoContratos.Repositorio.Base;
+﻿using GestaoContratos.Interface.Repositorio;
+using GestaoContratos.Repositorio.Base;
 
 namespace GestaoContratos.Repositorio
 {
-    public class TesteRepositorio : RepositorioBase
+    public class TesteRepositorio : RepositorioBase, ITesteRepositorio
     {
         public void IniciarTestes()
         {

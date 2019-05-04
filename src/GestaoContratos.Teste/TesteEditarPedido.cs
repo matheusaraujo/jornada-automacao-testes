@@ -1,5 +1,5 @@
-﻿using GestaoContratos.Dominio;
-using GestaoContratos.Processo;
+﻿using GestaoContratos.Dominio.Dto;
+using GestaoContratos.Interface.Processo;
 using GestaoContratos.Teste.Util;
 using GestaoContratos.Util;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -9,16 +9,22 @@ namespace GestaoContratos.Teste
     [TestClass]
     public class TesteEditarPedido
     {
+        private ITesteProcesso _testeProcesso;
+        private IContratoProcesso _contratoProcesso;
+        private IPedidoProcesso _pedidoProcesso;
+
         [TestInitialize]
         public void IniciarTestes()
         {
-            var testeProcesso = new TesteProcesso();
-            var contratoProcesso = new ContratoProcesso();
-            var pedidoProcesso = new PedidoProcesso();
+            InjetorDependencias.InjetorDependencias.Iniciar();
 
-            testeProcesso.IniciarTestes();
+            _testeProcesso = InjetorDependencias.InjetorDependencias.ObterInstancia<ITesteProcesso>();
+            _contratoProcesso = InjetorDependencias.InjetorDependencias.ObterInstancia<IContratoProcesso>();
+            _pedidoProcesso = InjetorDependencias.InjetorDependencias.ObterInstancia<IPedidoProcesso>();
 
-            contratoProcesso.InserirContrato(new Contrato()
+            _testeProcesso.IniciarTestes();
+
+            _contratoProcesso.InserirContrato(new ContratoDto()
             {
                 ContratoId = 1,
                 VolumeDisponivel = 100,
@@ -27,7 +33,7 @@ namespace GestaoContratos.Teste
                 Ativo = true
             });
 
-            pedidoProcesso.InserirPedido(new Pedido()
+            _pedidoProcesso.InserirPedido(new PedidoDto()
             {
                 PedidoId = 1,
                 ContratoId = 1,
@@ -43,7 +49,7 @@ namespace GestaoContratos.Teste
         [ExpectedExceptionMessage(typeof(RegraNegocioException), ConstantesRegraNegocio.VOLUME_PEDIDO_INVALIDO)]
         public void Erro3001()
         {
-            var pedido = new Pedido()
+            var pedido = new PedidoDto()
             {
                 PedidoId = 1,
                 ContratoId = 1,
@@ -51,8 +57,7 @@ namespace GestaoContratos.Teste
                 DataPedido = ExtensaoDateTime.DataAtual()
             };
 
-            var pedidoProcesso = new PedidoProcesso();
-            pedidoProcesso.EditarPedido(pedido);
+            _pedidoProcesso.EditarPedido(pedido);
         }
 
         [TestMethod]
@@ -60,7 +65,7 @@ namespace GestaoContratos.Teste
         [ExpectedExceptionMessage(typeof(RegraNegocioException), ConstantesRegraNegocio.DATA_PEDIDO_INVALIDA)]
         public void Erro3002()
         {
-            var pedido = new Pedido()
+            var pedido = new PedidoDto()
             {
                 PedidoId = 1,
                 ContratoId = 1,
@@ -68,8 +73,7 @@ namespace GestaoContratos.Teste
                 DataPedido = ExtensaoDateTime.DataAtual().AddDays(-1)
             };
 
-            var pedidoProcesso = new PedidoProcesso();
-            pedidoProcesso.EditarPedido(pedido);
+            _pedidoProcesso.EditarPedido(pedido);
         }
 
         [TestMethod]
@@ -77,7 +81,7 @@ namespace GestaoContratos.Teste
         [ExpectedExceptionMessage(typeof(RegraNegocioException), ConstantesRegraNegocio.CONTRATO_INATIVO)]
         public void Erro3005()
         {
-            var pedido = new Pedido()
+            var pedido = new PedidoDto()
             {
                 PedidoId = 1,
                 ContratoId = 1,
@@ -85,8 +89,7 @@ namespace GestaoContratos.Teste
                 DataPedido = ExtensaoDateTime.DataAtual()
             };
 
-            var contratoProceso = new ContratoProcesso();
-            contratoProceso.EditarContrato(new Contrato()
+            _contratoProcesso.EditarContrato(new ContratoDto()
             {
                 ContratoId = 1,
                 VolumeDisponivel = 100,
@@ -95,8 +98,7 @@ namespace GestaoContratos.Teste
                 Ativo = false
             });
 
-            var pedidoProcesso = new PedidoProcesso();
-            pedidoProcesso.EditarPedido(pedido);
+            _pedidoProcesso.EditarPedido(pedido);
         }
 
         [TestMethod]
@@ -104,7 +106,7 @@ namespace GestaoContratos.Teste
         [ExpectedExceptionMessage(typeof(RegraNegocioException), ConstantesRegraNegocio.VOLUME_CONTRATO_INSUFICIENTE)]
         public void Erro3006()
         {
-            var pedido = new Pedido()
+            var pedido = new PedidoDto()
             {
                 PedidoId = 1,
                 ContratoId = 1,
@@ -113,8 +115,7 @@ namespace GestaoContratos.Teste
                 Atendido = false
             };
 
-            var pedidoProcesso = new PedidoProcesso();
-            pedidoProcesso.InserirPedido(pedido);
+            _pedidoProcesso.InserirPedido(pedido);
         }
 
         [TestMethod]
@@ -122,7 +123,7 @@ namespace GestaoContratos.Teste
         [ExpectedExceptionMessage(typeof(RegraNegocioException), ConstantesRegraNegocio.DATA_PEDIDO_FORA_VIGENCIA_CONTRATO)]
         public void Erro3007()
         {
-            var pedido = new Pedido()
+            var pedido = new PedidoDto()
             {
                 PedidoId = 1,
                 ContratoId = 1,
@@ -131,8 +132,7 @@ namespace GestaoContratos.Teste
                 Atendido = false
             };
 
-            var pedidoProcesso = new PedidoProcesso();
-            pedidoProcesso.EditarPedido(pedido);
+            _pedidoProcesso.EditarPedido(pedido);
         }
 
         [TestMethod]
@@ -140,7 +140,7 @@ namespace GestaoContratos.Teste
         [ExpectedExceptionMessage(typeof(RegraNegocioException), ConstantesRegraNegocio.STATUS_PEDIDO_INVALIDO_EDICAO)]
         public void Erro3008()
         {
-            var pedido = new Pedido()
+            var pedido = new PedidoDto()
             {
                 PedidoId = 1,
                 ContratoId = 1,
@@ -149,17 +149,15 @@ namespace GestaoContratos.Teste
                 Atendido = false
             };
 
-            var pedidoProcesso = new PedidoProcesso();
-            
-            pedidoProcesso.AtenderPedido(1, 1);
-            pedidoProcesso.EditarPedido(pedido);
+            _pedidoProcesso.AtenderPedido(1, 1);
+            _pedidoProcesso.EditarPedido(pedido);
         }
 
         [TestMethod]
         [Description("Pedido editado com sucesso.")]
         public void Sucesso()
         {
-            var pedido = new Pedido()
+            var pedido = new PedidoDto()
             {
                 PedidoId = 1,
                 ContratoId = 1,
@@ -168,19 +166,16 @@ namespace GestaoContratos.Teste
                 Atendido = false
             };
 
-            var pedidoProcesso = new PedidoProcesso();
-            var contratoProcesso = new ContratoProcesso();
+            _pedidoProcesso.EditarPedido(pedido);
 
-            pedidoProcesso.EditarPedido(pedido);
-
-            var pedidoBanco = pedidoProcesso.ObterPedido(1, 1);
+            var pedidoBanco = _pedidoProcesso.ObterPedido(1, 1);
 
             Assert.AreEqual(pedido.PedidoId, pedidoBanco.PedidoId);
             Assert.AreEqual(pedido.ContratoId, pedidoBanco.ContratoId);
             Assert.AreEqual(pedido.Volume, pedidoBanco.Volume);
             Assert.AreEqual(pedido.Atendido, pedidoBanco.Atendido);
 
-            var contrato = contratoProcesso.ObterContrato(1);
+            var contrato = _contratoProcesso.ObterContrato(1);
             Assert.AreEqual(90, contrato.VolumeDisponivel);
         }
 
