@@ -1,15 +1,27 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Runtime.Serialization;
 
 namespace GestaoContratos.Util
 {
+    [Serializable]
     public class RegraNegocioException : Exception
     {
-        public RegraNegocioEnum CodigoErro { get; }
+        public RegraNegocioException()
+        {
 
-        public RegraNegocioException(RegraNegocioEnum e) : base(e.GetDescription())
+        }
+
+        public TipoRegraNegocio CodigoErro { get; }
+
+        public RegraNegocioException(TipoRegraNegocio e) : base(e.GetDescription())
         {
             CodigoErro = e;
+        }
+
+        protected RegraNegocioException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
         }
 
         public object Serializar()
@@ -40,7 +52,7 @@ namespace GestaoContratos.Util
         public const string STATUS_PEDIDO_INVALIDO_EXCLUSAO = "status_pedido_invalido_exclusao";
     }
 
-    public enum RegraNegocioEnum
+    public enum TipoRegraNegocio
     {
         [Description(ConstantesRegraNegocio.DATA_INICIO_VIGENCIA_INVALIDA)]
         DataInicioVigenciaInvalida = 2001,
