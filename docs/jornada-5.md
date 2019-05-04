@@ -6,6 +6,9 @@
 
 ## Testes usando mock
 
+- Implantar Moq
+- Criar playlist de teste
+
 ---
 
 [TO-DO]

@@ -54,6 +54,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Data.SQLite, Version=1.0.110.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Data.SQLite.Core.1.0.110.0\lib\net46\System.Data.SQLite.dll</HintPath>
     </Reference>
@@ -66,6 +67,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="TesteEditarPedido.cs" />
+    <Compile Include="TesteInicializacao.cs" />
+    <Compile Include="Util\UtilBancoDados.cs" />
     <Compile Include="Util\ExpectedExceptionMessage.cs" />
     <Compile Include="TesteInserirPedido.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

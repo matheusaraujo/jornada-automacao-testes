@@ -41,7 +41,6 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.SQLite, Version=1.0.110.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Data.SQLite.Core.1.0.110.0\lib\net46\System.Data.SQLite.dll</HintPath>
@@ -70,6 +69,10 @@
     <ProjectReference Include="..\GestaoContratos.Dominio\GestaoContratos.Dominio.csproj">
       <Project>{49b214ce-d3b8-476d-b992-b7df70940141}</Project>
       <Name>GestaoContratos.Dominio</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GestaoContratos.Util\GestaoContratos.Util.csproj">
+      <Project>{4398872B-B7B3-42C5-A43B-032C074CE163}</Project>
+      <Name>GestaoContratos.Util</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
