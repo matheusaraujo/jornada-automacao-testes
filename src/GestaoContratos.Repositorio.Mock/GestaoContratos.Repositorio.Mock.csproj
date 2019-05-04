@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9BC7178D-CE77-4D03-8630-F3592D131BBC}</ProjectGuid>
+    <ProjectGuid>{36FD9BEA-EF12-4CA2-BCB1-234AE11660F0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GestaoContratos.InjetorDependencias</RootNamespace>
-    <AssemblyName>GestaoContratos.InjetorDependencias</AssemblyName>
+    <RootNamespace>GestaoContratos.Repositorio.Mock</RootNamespace>
+    <AssemblyName>GestaoContratos.Repositorio.Mock</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -31,9 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SimpleInjector, Version=4.5.1.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
-      <HintPath>..\packages\SimpleInjector.4.5.1\lib\net45\SimpleInjector.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -44,33 +41,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="InjetorDependencias.cs" />
+    <Compile Include="BancoMemoria.cs" />
+    <Compile Include="ContratoRepositorioMock.cs" />
+    <Compile Include="PedidoRepositorioMock.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TesteRepositorioMock.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GestaoContratos.Interface.Processo\GestaoContratos.Interface.Processo.csproj">
-      <Project>{604A35BC-FB04-4F3A-BC49-ACA15CAAF5E7}</Project>
-      <Name>GestaoContratos.Interface.Processo</Name>
+    <ProjectReference Include="..\GestaoContratos.Dominio.Entidade\GestaoContratos.Dominio.Entidade.csproj">
+      <Project>{51795CEC-D699-43E7-AFAA-3245E5CD0EB2}</Project>
+      <Name>GestaoContratos.Dominio.Entidade</Name>
     </ProjectReference>
     <ProjectReference Include="..\GestaoContratos.Interface.Repositorio\GestaoContratos.Interface.Repositorio.csproj">
       <Project>{F6B4FD6F-17C4-4A78-B379-10FB350D15DC}</Project>
       <Name>GestaoContratos.Interface.Repositorio</Name>
     </ProjectReference>
-    <ProjectReference Include="..\GestaoContratos.Processo\GestaoContratos.Processo.csproj">
-      <Project>{80D00F85-FF5D-41EB-BC58-BC9F71C67FB0}</Project>
-      <Name>GestaoContratos.Processo</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\GestaoContratos.Repositorio.Mock\GestaoContratos.Repositorio.Mock.csproj">
-      <Project>{36FD9BEA-EF12-4CA2-BCB1-234AE11660F0}</Project>
-      <Name>GestaoContratos.Repositorio.Mock</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\GestaoContratos.Repositorio\GestaoContratos.Repositorio.csproj">
-      <Project>{13614C82-F038-4BF0-A1EA-42EB4DC0D72C}</Project>
-      <Name>GestaoContratos.Repositorio</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
