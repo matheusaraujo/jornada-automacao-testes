@@ -1,4 +1,5 @@
-﻿using GestaoContratos.Dominio.Entidade;
+﻿using GestaoContratos.Dominio.Dto;
+using GestaoContratos.Dominio.Entidade;
 using GestaoContratos.Interface.Repositorio;
 using GestaoContratos.Processo;
 using GestaoContratos.Teste.Processo.Util;
@@ -39,6 +40,42 @@ namespace GestaoContratos.Teste.Processo
             var pedidoProcesso = new PedidoProcesso(mockContratoRepositorio.Object, mockPedidoRepositorio.Object);
 
             pedidoProcesso.ValidarPedido(pedido, contrato, new DateTime(2019, 1, 15));
+        }
+
+        [TestMethod]
+        [ExpectedExceptionMessage(typeof(RegraNegocioException), ConstantesRegraNegocio.STATUS_PEDIDO_INVALIDO_EDICAO)]
+        public void TesteEditarPedido_StatusInvalido()
+        {
+            var mockContratoRepositorio = new Mock<IContratoRepositorio>();
+            var mockPedidoRepositorio = new Mock<IPedidoRepositorio>();
+
+            mockPedidoRepositorio.Setup(m => m.ObterPedido(It.Is<int>(id => id == 1), It.Is<int>(id => id == 1))).Returns(new Pedido()
+            {
+                PedidoId = 1,
+                ContratoId = 1,
+                Volume = 5,
+                Atendido = true,
+                DataPedido = ExtensaoDateTime.DataAtual()
+            });
+
+            mockContratoRepositorio.Setup(m => m.ObterContrato(It.Is<int>(id => id == 1))).Returns(new Contrato()
+            {
+                ContratoId = 1,
+                Ativo = true,
+                DataInicioVigencia = ExtensaoDateTime.DataInicioMesAtual(),
+                DataFimVigencia = ExtensaoDateTime.DataFimMesAtual(),
+                VolumeDisponivel = 100
+            });
+
+            var pedidoProcesso = new PedidoProcesso(mockContratoRepositorio.Object, mockPedidoRepositorio.Object);
+
+            pedidoProcesso.EditarPedido(new PedidoDto()
+            {
+                PedidoId = 1,
+                ContratoId = 1,
+                Volume = 5,                
+                DataPedido = ExtensaoDateTime.DataAtual()
+            });
         }
     }
 }

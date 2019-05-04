@@ -4,11 +4,22 @@
 
 ---
 
-## Testes usando mock
+```
+git checkout v4.7
+```
 
-- Refatorar camada de processo
-- Implantar Moq
-- Criar playlist de teste
+- Validação de pedido refatorada
+- Testes unitários
+
+---
+
+```
+git checkout v4.8
+```
+
+- Testes usando setup
+- Testes com assert no repositório
+-
 
 ---
 

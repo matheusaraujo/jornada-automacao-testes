@@ -70,6 +70,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GestaoContratos.Dominio.Dto\GestaoContratos.Dominio.Dto.csproj">
+      <Project>{2A4AC554-3BB4-40B6-AA10-0526CBBAF284}</Project>
+      <Name>GestaoContratos.Dominio.Dto</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GestaoContratos.Dominio.Entidade\GestaoContratos.Dominio.Entidade.csproj">
       <Project>{51795CEC-D699-43E7-AFAA-3245E5CD0EB2}</Project>
       <Name>GestaoContratos.Dominio.Entidade</Name>
