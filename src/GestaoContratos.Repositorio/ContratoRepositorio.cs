@@ -1,40 +1,15 @@
 ﻿using GestaoContratos.Dominio;
 using GestaoContratos.Repositorio.Base;
-using System;
 using System.Collections.Generic;
-using System.Data.SQLite;
 
 namespace GestaoContratos.Repositorio
 {
     public class ContratoRepositorio : RepositorioBase
     {
         public IList<Contrato> ObterContratos()
-        {
-            var contratos = new List<Contrato>();
+        {   
             string sql = "SELECT * FROM Contrato ORDER BY Ativo DESC, VolumeDisponivel DESC";
-
-            using (var conexao = CriarConexao())
-            {
-                using (var comando = new SQLiteCommand(sql, conexao))
-                {
-                    comando.Connection.Open();
-                    using (var consulta = comando.ExecuteReader())
-                    {
-                        while (consulta.Read())
-                        {
-                            contratos.Add(new Contrato()
-                            {
-                                ContratoId = int.Parse(consulta["ContratoId"].ToString()),
-                                VolumeDisponivel = float.Parse(consulta["VolumeDisponivel"].ToString()),
-                                DataInicioVigencia = new DateTime(long.Parse(consulta["DataInicioVigencia"].ToString())),
-                                DataFimVigencia = new DateTime(long.Parse(consulta["DataFimVigencia"].ToString())),
-                                Ativo = (consulta["Ativo"].ToString() == "1")
-                            });
-                        }
-                        return contratos;
-                    }
-                }
-            }
+            return ExecutarConsulta(sql, Conversor.CriarContrato);            
         }
 
         public int InserirContrato(Contrato contrato)
@@ -76,16 +51,7 @@ namespace GestaoContratos.Repositorio
         public void DeletarContrato(int contratoId)
         {
             string sql = @"DELETE FROM Contrato WHERE ContratoId = @ContratoId";
-
-            using (var conexao = CriarConexao())
-            {
-                using (var comando = new SQLiteCommand(sql, conexao))
-                {
-                    comando.Connection.Open();
-                    comando.Parameters.AddWithValue("ContratoId", contratoId);
-                    comando.ExecuteNonQuery();
-                }
-            }
+            Executar(sql, Parametro("ContratoId", contratoId));
         }
 
         public void EditarVolumeContrato(Contrato contrato)

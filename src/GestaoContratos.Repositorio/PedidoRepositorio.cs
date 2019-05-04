@@ -1,7 +1,6 @@
 ﻿using GestaoContratos.Dominio;
 using GestaoContratos.Repositorio.Base;
 using System.Collections.Generic;
-using System.Data.SQLite;
 
 namespace GestaoContratos.Repositorio
 {
@@ -52,18 +51,7 @@ namespace GestaoContratos.Repositorio
         public void DeletarPedido(int contratoId, int pedidoId)
         {
             string sql = @"DELETE FROM Pedido WHERE ContratoId = @ContratoId AND ContratoId = @ContratoId";
-
-            using (var conexao = CriarConexao())
-            {
-                using (var comando = new SQLiteCommand(sql, conexao))
-                {
-                    comando.Connection.Open();
-                    comando.Parameters.AddWithValue("ContratoId", contratoId);
-                    comando.Parameters.AddWithValue("PedidoId", pedidoId);
-                    comando.ExecuteNonQuery();
-                    comando.Connection.Close();
-                }
-            }
+            Executar(sql, Parametro("ContratoId", contratoId), Parametro("PedidoId", pedidoId));
         }
     }
 }

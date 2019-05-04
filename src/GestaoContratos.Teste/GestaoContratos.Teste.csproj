@@ -66,8 +66,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TesteDeletarContrato.cs" />
+    <Compile Include="TesteDeletarPedido.cs" />
     <Compile Include="TesteEditarPedido.cs" />
     <Compile Include="TesteInicializacao.cs" />
+    <Compile Include="TesteObterContratos.cs" />
     <Compile Include="Util\UtilBancoDados.cs" />
     <Compile Include="Util\ExpectedExceptionMessage.cs" />
     <Compile Include="TesteInserirPedido.cs" />

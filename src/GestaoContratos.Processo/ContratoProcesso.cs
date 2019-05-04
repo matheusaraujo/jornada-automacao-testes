@@ -22,11 +22,11 @@ namespace GestaoContratos.Processo
         public int InserirContrato(Contrato contrato)
         {
             if (contrato.DataInicioVigencia.Date > DateTime.Now.Date)
-                throw new RegraNegocioException(RegraNegocioEnum.DataInicioVigenciaInvalida);
+                throw new RegraNegocioException(TipoRegraNegocio.DataInicioVigenciaInvalida);
             else if (contrato.DataFimVigencia < DateTime.Now.Date)
-                throw new RegraNegocioException(RegraNegocioEnum.DataFimVigenciaInvalida);
+                throw new RegraNegocioException(TipoRegraNegocio.DataFimVigenciaInvalida);
             else if (contrato.VolumeDisponivel < 1)
-                throw new RegraNegocioException(RegraNegocioEnum.VolumeDisponivelInvalido);
+                throw new RegraNegocioException(TipoRegraNegocio.VolumeDisponivelInvalido);
 
             return new ContratoRepositorio().InserirContrato(contrato);
         }
@@ -37,11 +37,11 @@ namespace GestaoContratos.Processo
             var pedidoRepositorio = new PedidoRepositorio();
 
             if (contrato.DataInicioVigencia.Date > DateTime.Now.Date)
-                throw new RegraNegocioException(RegraNegocioEnum.DataInicioVigenciaInvalida);
+                throw new RegraNegocioException(TipoRegraNegocio.DataInicioVigenciaInvalida);
             else if (contrato.DataFimVigencia < DateTime.Now.Date)
-                throw new RegraNegocioException(RegraNegocioEnum.DataFimVigenciaInvalida);
+                throw new RegraNegocioException(TipoRegraNegocio.DataFimVigenciaInvalida);
             else if (contrato.VolumeDisponivel < 1)
-                throw new RegraNegocioException(RegraNegocioEnum.VolumeDisponivelInvalido);
+                throw new RegraNegocioException(TipoRegraNegocio.VolumeDisponivelInvalido);
 
             var contratoAtual = contratoRepositorio.ObterContrato(contrato.ContratoId);
             if (contratoAtual == null)
@@ -50,7 +50,7 @@ namespace GestaoContratos.Processo
             var pedidos = pedidoRepositorio.ObterPedidos(contrato.ContratoId);
             var volumePedidosPendentes = pedidos.Where(p => !p.Atendido).Sum(p => p.Volume);
             if (contrato.VolumeDisponivel < volumePedidosPendentes)
-                throw new RegraNegocioException(RegraNegocioEnum.VolumeDisponivelInvalidoEdicao);
+                throw new RegraNegocioException(TipoRegraNegocio.VolumeDisponivelInvalidoEdicao);
 
             contratoRepositorio.EditarContrato(contrato);
 
@@ -68,7 +68,7 @@ namespace GestaoContratos.Processo
 
             var pedidos = pedidoRepositorio.ObterPedidos(contratoId);
             if (pedidos != null && pedidos.Count > 0)
-                throw new RegraNegocioException(RegraNegocioEnum.ContratoPossuiPedidos);
+                throw new RegraNegocioException(TipoRegraNegocio.ContratoPossuiPedidos);
 
             contratoRepositorio.DeletarContrato(contratoId);
 
