@@ -43,7 +43,7 @@ describe('Inserir pedido', () => {
   it('Erro 3003 - O pedido deve ser criado com status não atendido.', async () => {
     const pedido = {
       "pedidoId": 1,
-      "contratoId": 999,
+      "contratoId": 1,
       "volume": 5,
       "dataPedido": dataAtual(),
       "atendido": true

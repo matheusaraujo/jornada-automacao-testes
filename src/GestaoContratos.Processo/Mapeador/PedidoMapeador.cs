@@ -35,10 +35,5 @@ namespace GestaoPedidos.Processo.Mapeador
         {
             return entidades.ToList().ConvertAll(e => e.Converter());
         }
-
-        public static IList<Pedido> Converter(this IList<PedidoDto> entidades)
-        {
-            return entidades.ToList().ConvertAll(e => e.Converter());
-        }
     }
 }
