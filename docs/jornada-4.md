@@ -25,7 +25,7 @@ git checkout v3.9
 git checkout v4.0
 ```
 
-- Resolver problema na repositório base
+- 
 - 
 ---
 

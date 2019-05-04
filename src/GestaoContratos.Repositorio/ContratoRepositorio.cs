@@ -39,48 +39,21 @@ namespace GestaoContratos.Repositorio
 
         public int InserirContrato(Contrato contrato)
         {
-            string sql = @"INSERT INTO Contrato (VolumeDisponivel, DataInicioVigencia, DataFimVigencia, Ativo)
+            var sql = @"INSERT INTO Contrato (VolumeDisponivel, DataInicioVigencia, DataFimVigencia, Ativo)
                 VALUES (@VolumeDisponivel, @DataInicioVigencia, @DataFimVigencia, @Ativo); SELECT last_insert_rowid();";
 
-            using (var conexao = CriarConexao())
-            {
-                using (var comando = new SQLiteCommand(sql, conexao))
-                {
-                    comando.Connection.Open();
-                    comando.Parameters.AddWithValue("VolumeDisponivel", contrato.VolumeDisponivel);
-                    comando.Parameters.AddWithValue("DataInicioVigencia", contrato.DataInicioVigencia.Ticks);
-                    comando.Parameters.AddWithValue("DataFimVigencia", contrato.DataFimVigencia.Ticks);
-                    comando.Parameters.AddWithValue("Ativo", contrato.Ativo);
-                    return int.Parse(comando.ExecuteScalar().ToString());
-                }
-            }
+            return ExecutarRetornoInteiro(sql,
+                Parametro("VolumeDisponivel", contrato.VolumeDisponivel),
+                Parametro("DataInicioVigencia", contrato.DataInicioVigencia.Ticks),
+                Parametro("DataFimVigencia", contrato.DataFimVigencia.Ticks),
+                Parametro("Ativo", contrato.Ativo)
+            );
         }
 
         public Contrato ObterContrato(int contratoId)
         {
             string sql = "SELECT * FROM Contrato WHERE ContratoId = @ContratoId";
-            using (var conexao = CriarConexao())
-            {
-                using (var comando = new SQLiteCommand(sql, conexao))
-                {
-                    comando.Connection.Open();
-                    comando.Parameters.AddWithValue("ContratoId", contratoId);
-                    using (var consulta = comando.ExecuteReader())
-                    {
-                        if (!consulta.Read())
-                            return null;
-
-                        return new Contrato()
-                        {
-                            ContratoId = int.Parse(consulta["ContratoId"].ToString()),
-                            VolumeDisponivel = float.Parse(consulta["VolumeDisponivel"].ToString()),
-                            DataInicioVigencia = new DateTime(long.Parse(consulta["DataInicioVigencia"].ToString())),
-                            DataFimVigencia = new DateTime(long.Parse(consulta["DataFimVigencia"].ToString())),
-                            Ativo = (consulta["Ativo"].ToString() == "1")
-                        };
-                    }
-                }
-            }
+            return ExecutarConsultaUnica(sql, Conversor.CriarContrato, Parametro("ContratoId", contratoId));
         }
 
         public void EditarContrato(Contrato contrato)
@@ -92,19 +65,12 @@ namespace GestaoContratos.Repositorio
                 Ativo = @Ativo
                 WHERE ContratoId = @ContratoId";
 
-            using (var conexao = CriarConexao())
-            {
-                using (var comando = new SQLiteCommand(sql, conexao))
-                {
-                    comando.Connection.Open();
-                    comando.Parameters.AddWithValue("ContratoId", contrato.ContratoId);
-                    comando.Parameters.AddWithValue("VolumeDisponivel", contrato.VolumeDisponivel);
-                    comando.Parameters.AddWithValue("DataInicioVigencia", contrato.DataInicioVigencia.Ticks);
-                    comando.Parameters.AddWithValue("DataFimVigencia", contrato.DataFimVigencia.Ticks);
-                    comando.Parameters.AddWithValue("Ativo", contrato.Ativo);
-                    comando.ExecuteNonQuery();
-                }
-            }
+            Executar(sql, Parametro("ContratoId", contrato.ContratoId),
+                Parametro("VolumeDisponivel", contrato.VolumeDisponivel),
+                Parametro("DataInicioVigencia", contrato.DataInicioVigencia.Ticks),
+                Parametro("DataFimVigencia", contrato.DataFimVigencia.Ticks),
+                Parametro("Ativo", contrato.Ativo)
+            );
         }
 
         public void DeletarContrato(int contratoId)
@@ -128,16 +94,10 @@ namespace GestaoContratos.Repositorio
                 SET VolumeDisponivel = @VolumeDisponivel
                 WHERE ContratoId = @ContratoId";
 
-            using (var conexao = CriarConexao())
-            {
-                using (var comando = new SQLiteCommand(sql, conexao))
-                {
-                    comando.Connection.Open();
-                    comando.Parameters.AddWithValue("ContratoId", contrato.ContratoId);
-                    comando.Parameters.AddWithValue("VolumeDisponivel", contrato.VolumeDisponivel);
-                    comando.ExecuteNonQuery();
-                }
-            }
+            Executar(sql,
+                Parametro("ContratoId", contrato.ContratoId),
+                Parametro("VolumeDisponivel", contrato.VolumeDisponivel)
+            );
         }
     }
 }
