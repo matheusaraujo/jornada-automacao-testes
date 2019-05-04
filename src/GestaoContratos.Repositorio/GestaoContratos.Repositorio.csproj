@@ -59,6 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base\Conversor.cs" />
     <Compile Include="Base\RepositorioBase.cs" />
     <Compile Include="ContratoRepositorio.cs" />
     <Compile Include="PedidoRepositorio.cs" />

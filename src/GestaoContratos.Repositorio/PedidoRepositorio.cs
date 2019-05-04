@@ -1,6 +1,5 @@
 ﻿using GestaoContratos.Dominio;
 using GestaoContratos.Repositorio.Base;
-using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 
@@ -10,64 +9,16 @@ namespace GestaoContratos.Repositorio
     {
         public IList<Pedido> ObterPedidos(int contratoId)
         {
-            var lista = new List<Pedido>();
-
             string sql = @"SELECT * FROM Pedido 
                 WHERE ContratoId = @ContratoId
                 ORDER BY Atendido, DataPedido, Volume DESC";
-
-            using (var conexao = CriarConexao())
-            {
-                using (var comando = new SQLiteCommand(sql, conexao))
-                {
-                    comando.Parameters.AddWithValue("ContratoId", contratoId);
-                    comando.Connection.Open();
-                    using (var consulta = comando.ExecuteReader())
-                    {
-                        while (consulta.Read())
-                        {
-                            lista.Add(new Pedido()
-                            {
-                                PedidoId = int.Parse(consulta["PedidoId"].ToString()),
-                                ContratoId = int.Parse(consulta["ContratoId"].ToString()),
-                                Volume = float.Parse(consulta["Volume"].ToString()),
-                                DataPedido = new DateTime(long.Parse(consulta["DataPedido"].ToString())),
-                                Atendido = (consulta["Atendido"].ToString() == "1")
-                            });
-                        }
-                        return lista;
-                    }
-                }
-            }
+            return ExecutarConsulta(sql, Conversor.CriarPedido, Parametro("ContratoId", contratoId));
         }
 
         public Pedido ObterPedido(int contratoId, int pedidoId)
         {
             string sql = "SELECT * FROM Pedido WHERE ContratoId = @ContratoId AND PedidoId = @PedidoId";
-            using (var conexao = CriarConexao())
-            {
-                using (var comando = new SQLiteCommand(sql, conexao))
-                {
-                    comando.Parameters.AddWithValue("ContratoId", contratoId);
-                    comando.Parameters.AddWithValue("PedidoId", pedidoId);
-                    comando.Connection.Open();
-
-                    using (var consulta = comando.ExecuteReader())
-                    {
-                        if (!consulta.Read())
-                            return null;
-
-                        return new Pedido()
-                        {
-                            PedidoId = int.Parse(consulta["PedidoId"].ToString()),
-                            ContratoId = int.Parse(consulta["ContratoId"].ToString()),
-                            Volume = float.Parse(consulta["Volume"].ToString()),
-                            DataPedido = new DateTime(long.Parse(consulta["DataPedido"].ToString())),
-                            Atendido = (consulta["Atendido"].ToString() == "1"),
-                        };
-                    }
-                }
-            }
+            return ExecutarConsultaUnica(sql, Conversor.CriarPedido, Parametro("ContratoId", contratoId), Parametro("PedidoId", pedidoId));
         }
 
         public int InserirPedido(Pedido pedido)
@@ -75,18 +26,11 @@ namespace GestaoContratos.Repositorio
             string sql = @"INSERT INTO Pedido (ContratoId, Volume, DataPedido, Atendido)
                     VALUES (@ContratoId, @Volume, @DataPedido, @Atendido); SELECT last_insert_rowid();";
 
-            using (var conexao = CriarConexao())
-            {
-                using (var comando = new SQLiteCommand(sql, conexao))
-                {
-                    comando.Connection.Open();
-                    comando.Parameters.AddWithValue("ContratoId", pedido.ContratoId);
-                    comando.Parameters.AddWithValue("Volume", pedido.Volume);
-                    comando.Parameters.AddWithValue("DataPedido", pedido.DataPedido.Ticks);
-                    comando.Parameters.AddWithValue("Atendido", pedido.Atendido ? 1 : 0);
-                    return int.Parse(comando.ExecuteScalar().ToString());
-                }
-            }
+            return ExecutarRetornoInteiro(sql, Parametro("ContratoId", pedido.ContratoId),
+                Parametro("Volume", pedido.Volume),
+                Parametro("DataPedido", pedido.DataPedido.Ticks),
+                Parametro("Atendido", 0)
+            );
         }
 
         public void EditarPedido(Pedido pedido)
@@ -97,19 +41,12 @@ namespace GestaoContratos.Repositorio
                 Atendido = @Atendido
                 WHERE ContratoId = @ContratoId AND PedidoId = @PedidoId";
 
-            using (var conexao = CriarConexao())
-            {
-                using (var comando = new SQLiteCommand(sql, conexao))
-                {
-                    comando.Connection.Open();
-                    comando.Parameters.AddWithValue("ContratoId", pedido.ContratoId);
-                    comando.Parameters.AddWithValue("PedidoId", pedido.PedidoId);
-                    comando.Parameters.AddWithValue("Volume", pedido.Volume);
-                    comando.Parameters.AddWithValue("DataPedido", pedido.DataPedido.Ticks);
-                    comando.Parameters.AddWithValue("Atendido", pedido.Atendido);
-                    comando.ExecuteNonQuery();
-                }
-            }
+            Executar(sql, Parametro("ContratoId", pedido.ContratoId),
+                Parametro("PedidoId", pedido.PedidoId),
+                Parametro("Volume", pedido.Volume),
+                Parametro("DataPedido", pedido.DataPedido.Ticks),
+                Parametro("Atendido", pedido.Atendido)
+            );
         }
 
         public void DeletarPedido(int contratoId, int pedidoId)

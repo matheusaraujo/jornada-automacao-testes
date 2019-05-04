@@ -16,7 +16,7 @@ git checkout v2.8
 git checkout v2.9
 ```
 
-- Camada de repositório fatorada
+- Camada de repositório refatorada
 - Índice de cobertura caiu 
 
 ---
