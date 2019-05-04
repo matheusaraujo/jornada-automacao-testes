@@ -1,5 +1,5 @@
-﻿using GestaoContratos.Dominio;
-using GestaoContratos.Processo;
+﻿using GestaoContratos.Dominio.Dto;
+using GestaoContratos.Interface.Processo;
 using GestaoContratos.Util;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -8,13 +8,21 @@ namespace GestaoContratos.Teste
     [TestClass]
     public class TesteDeletarPedido
     {
+        private ITesteProcesso _testeProcesso;
+        private IContratoProcesso _contratoProcesso;
+        private IPedidoProcesso _pedidoProcesso;
+
         [TestInitialize]
         public void IniciarTestes()
         {
-            var testeProcesso = new TesteProcesso();
-            testeProcesso.IniciarTestes();
-            var contratoProcesso = new ContratoProcesso();
-            contratoProcesso.InserirContrato(new Contrato()
+            InjetorDependencias.InjetorDependencias.Iniciar();
+
+            _testeProcesso = InjetorDependencias.InjetorDependencias.ObterInstancia<ITesteProcesso>();
+            _contratoProcesso = InjetorDependencias.InjetorDependencias.ObterInstancia<IContratoProcesso>();
+            _pedidoProcesso = InjetorDependencias.InjetorDependencias.ObterInstancia<IPedidoProcesso>();
+
+            _testeProcesso.IniciarTestes();            
+            _contratoProcesso.InserirContrato(new ContratoDto()
             {
                 ContratoId = 1,
                 VolumeDisponivel = 100,
@@ -27,9 +35,7 @@ namespace GestaoContratos.Teste
         [TestMethod]
         public void Teste_DeletarPedido_NaoAtendido()
         {
-            var pedidoProcesso = new PedidoProcesso();
-
-            pedidoProcesso.InserirPedido(new Pedido()
+            _pedidoProcesso.InserirPedido(new PedidoDto()
             {
                 PedidoId = 1,
                 ContratoId = 1,
@@ -38,9 +44,9 @@ namespace GestaoContratos.Teste
                 Atendido = false
             });
 
-            pedidoProcesso.DeletarPedido(1, 1);
+            _pedidoProcesso.DeletarPedido(1, 1);
 
-            var pedido = pedidoProcesso.ObterPedido(1, 1);
+            var pedido = _pedidoProcesso.ObterPedido(1, 1);
             Assert.IsNull(pedido);
         }
     }

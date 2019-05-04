@@ -1,5 +1,5 @@
-﻿using GestaoContratos.Dominio;
-using GestaoContratos.Processo;
+﻿using GestaoContratos.Dominio.Dto;
+using GestaoContratos.Interface.Processo;
 using GestaoContratos.Util;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -8,27 +8,30 @@ namespace GestaoContratos.Teste
     [TestClass]
     public class TesteObterContratos
     {
+        private ITesteProcesso _testeProcesso;
+        private IContratoProcesso _contratoProcesso;
 
         [TestInitialize]
         public void IniciarTestes()
         {
-            var testeProcesso = new TesteProcesso();
-            testeProcesso.IniciarTestes();
+            InjetorDependencias.InjetorDependencias.Iniciar();
+            _testeProcesso = InjetorDependencias.InjetorDependencias.ObterInstancia<ITesteProcesso>();
+            _contratoProcesso = InjetorDependencias.InjetorDependencias.ObterInstancia<IContratoProcesso>();
+            
+            _testeProcesso.IniciarTestes();
         }
 
         [TestMethod]
         public void Teste_ObterContratos_Vazio()
-        {
-            var contratoProcesso = new ContratoProcesso();
-            var contratos = contratoProcesso.ObterContratos();
+        {   
+            var contratos = _contratoProcesso.ObterContratos();
             Assert.IsTrue(contratos == null || contratos.Count == 0);
         }
 
         [TestMethod]
         public void Teste_ObterContratos_UmContrato()
-        {
-            var contratoProcesso = new ContratoProcesso();
-            contratoProcesso.InserirContrato(new Contrato()
+        {   
+            _contratoProcesso.InserirContrato(new ContratoDto()
             {
                 ContratoId = 1,
                 VolumeDisponivel = 100,
@@ -36,7 +39,7 @@ namespace GestaoContratos.Teste
                 DataFimVigencia = ExtensaoDateTime.DataFimMesAtual(),
                 Ativo = true
             });
-            var contratos = contratoProcesso.ObterContratos();
+            var contratos = _contratoProcesso.ObterContratos();
             Assert.IsNotNull(contratos);
             Assert.AreEqual(1, contratos.Count);
         }

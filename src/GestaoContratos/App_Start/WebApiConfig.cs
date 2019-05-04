@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Serialization;
+using SimpleInjector.Integration.WebApi;
 using Swashbuckle.Application;
 using System.Web.Http;
 using System.Web.Http.Cors;
@@ -27,6 +28,9 @@ namespace GestaoContratos
                 constraints: null,
                 handler: new RedirectHandler(SwaggerDocsConfig.DefaultRootUrlResolver, "swagger/ui/index")
             );
+
+            InjetorDependencias.InjetorDependencias.Iniciar();
+            config.DependencyResolver = new SimpleInjectorWebApiDependencyResolver(InjetorDependencias.InjetorDependencias.Container);
         }
     }
 }

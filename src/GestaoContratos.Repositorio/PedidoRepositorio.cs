@@ -1,10 +1,11 @@
-﻿using GestaoContratos.Dominio;
+﻿using GestaoContratos.Dominio.Entidade;
+using GestaoContratos.Interface.Repositorio;
 using GestaoContratos.Repositorio.Base;
 using System.Collections.Generic;
 
 namespace GestaoContratos.Repositorio
 {
-    public class PedidoRepositorio : RepositorioBase
+    public class PedidoRepositorio : RepositorioBase, IPedidoRepositorio
     {
         public IList<Pedido> ObterPedidos(int contratoId)
         {

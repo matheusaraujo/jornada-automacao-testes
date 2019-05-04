@@ -1,5 +1,7 @@
-﻿using GestaoContratos.Dominio;
-using GestaoContratos.Repositorio;
+﻿using GestaoContratos.Dominio.Dto;
+using GestaoContratos.Interface.Processo;
+using GestaoContratos.Interface.Repositorio;
+using GestaoContratos.Processo.Mapeador;
 using GestaoContratos.Util;
 using System;
 using System.Collections.Generic;
@@ -7,20 +9,30 @@ using System.Linq;
 
 namespace GestaoContratos.Processo
 {
-    public class ContratoProcesso
+    public class ContratoProcesso : IContratoProcesso
     {
-        public IList<Contrato> ObterContratos()
+        private readonly IContratoRepositorio _contratoRepositorio;
+        private readonly IPedidoRepositorio _pedidoRepositorio;
+
+        public ContratoProcesso(IContratoRepositorio contratoRepositorio, IPedidoRepositorio pedidoRepositorio)
         {
-            return new ContratoRepositorio().ObterContratos();
+            _contratoRepositorio = contratoRepositorio;
+            _pedidoRepositorio = pedidoRepositorio;
+        }
+
+        public IList<ContratoDto> ObterContratos()
+        {
+            return _contratoRepositorio.ObterContratos().Converter();
         }   
 
-        public Contrato ObterContrato(int contratoId)
+        public ContratoDto ObterContrato(int contratoId)
         {
-            return new ContratoRepositorio().ObterContrato(contratoId);
+            return _contratoRepositorio.ObterContrato(contratoId).Converter();
         }
 
-        public int InserirContrato(Contrato contrato)
+        public int InserirContrato(ContratoDto contratoDto)
         {
+            var contrato = contratoDto.Converter();
             if (contrato.DataInicioVigencia.Date > DateTime.Now.Date)
                 throw new RegraNegocioException(TipoRegraNegocio.DataInicioVigenciaInvalida);
             else if (contrato.DataFimVigencia < DateTime.Now.Date)
@@ -28,14 +40,13 @@ namespace GestaoContratos.Processo
             else if (contrato.VolumeDisponivel < 1)
                 throw new RegraNegocioException(TipoRegraNegocio.VolumeDisponivelInvalido);
 
-            return new ContratoRepositorio().InserirContrato(contrato);
+            return _contratoRepositorio.InserirContrato(contrato);
         }
 
-        public bool EditarContrato(Contrato contrato)
+        public bool EditarContrato(ContratoDto contratoDto)
         {
-            var contratoRepositorio = new ContratoRepositorio();
-            var pedidoRepositorio = new PedidoRepositorio();
-
+            var contrato = contratoDto.Converter();
+            
             if (contrato.DataInicioVigencia.Date > DateTime.Now.Date)
                 throw new RegraNegocioException(TipoRegraNegocio.DataInicioVigenciaInvalida);
             else if (contrato.DataFimVigencia < DateTime.Now.Date)
@@ -43,34 +54,31 @@ namespace GestaoContratos.Processo
             else if (contrato.VolumeDisponivel < 1)
                 throw new RegraNegocioException(TipoRegraNegocio.VolumeDisponivelInvalido);
 
-            var contratoAtual = contratoRepositorio.ObterContrato(contrato.ContratoId);
+            var contratoAtual = _contratoRepositorio.ObterContrato(contrato.ContratoId);
             if (contratoAtual == null)
                 return false;
 
-            var pedidos = pedidoRepositorio.ObterPedidos(contrato.ContratoId);
+            var pedidos = _pedidoRepositorio.ObterPedidos(contrato.ContratoId);
             var volumePedidosPendentes = pedidos.Where(p => !p.Atendido).Sum(p => p.Volume);
             if (contrato.VolumeDisponivel < volumePedidosPendentes)
                 throw new RegraNegocioException(TipoRegraNegocio.VolumeDisponivelInvalidoEdicao);
 
-            contratoRepositorio.EditarContrato(contrato);
+            _contratoRepositorio.EditarContrato(contrato);
 
             return true;
         }
 
         public bool DeletarContrato(int contratoId)
         {
-            var contratoRepositorio = new ContratoRepositorio();
-            var pedidoRepositorio = new PedidoRepositorio();
-
-            var contratoAtual = contratoRepositorio.ObterContrato(contratoId);
+            var contratoAtual = _contratoRepositorio.ObterContrato(contratoId);
             if (contratoAtual == null)
                 return false;
 
-            var pedidos = pedidoRepositorio.ObterPedidos(contratoId);
+            var pedidos = _pedidoRepositorio.ObterPedidos(contratoId);
             if (pedidos != null && pedidos.Count > 0)
                 throw new RegraNegocioException(TipoRegraNegocio.ContratoPossuiPedidos);
 
-            contratoRepositorio.DeletarContrato(contratoId);
+            _contratoRepositorio.DeletarContrato(contratoId);
 
             return true;
         }

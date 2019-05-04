@@ -8,8 +8,9 @@
 git checkout v3.8
 ```
 
-- Colocar injeção de dependência
-- Refatorar camada de processo
+- Injeção de dependência
+
+![Diagrama de dependências](jornada-4/diagrama-dependencias.png)
 
 ---
 
@@ -17,7 +18,7 @@ git checkout v3.8
 git checkout v3.9
 ```
 
-- Implementar classes de Mock
+- Classes de Mock
 
 ---
 

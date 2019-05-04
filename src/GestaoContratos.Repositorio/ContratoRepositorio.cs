@@ -1,10 +1,11 @@
-﻿using GestaoContratos.Dominio;
+﻿using GestaoContratos.Dominio.Entidade;
+using GestaoContratos.Interface.Repositorio;
 using GestaoContratos.Repositorio.Base;
 using System.Collections.Generic;
 
 namespace GestaoContratos.Repositorio
 {
-    public class ContratoRepositorio : RepositorioBase
+    public class ContratoRepositorio : RepositorioBase, IContratoRepositorio
     {
         public IList<Contrato> ObterContratos()
         {   

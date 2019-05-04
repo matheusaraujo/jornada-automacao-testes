@@ -1,4 +1,4 @@
-﻿using GestaoContratos.Processo;
+﻿using GestaoContratos.Interface.Processo;
 using Swashbuckle.Swagger.Annotations;
 using System;
 using System.Net;
@@ -9,6 +9,13 @@ namespace GestaoContratos.Controllers
     [RoutePrefix("api/v1")]
     public class TesteController : BaseApiController
     {
+        private readonly ITesteProcesso _testeProcesso;
+
+        public TesteController(ITesteProcesso testeProcesso)
+        {
+            _testeProcesso = testeProcesso;
+        }
+
         [HttpPost]
         [Route("testes")]
         [SwaggerResponse(HttpStatusCode.NoContent, "Alterado")]
@@ -17,7 +24,7 @@ namespace GestaoContratos.Controllers
         {
             try
             {
-                new TesteProcesso().IniciarTestes();
+                _testeProcesso.IniciarTestes();
                 return NoContent();
             }
             catch (Exception e)

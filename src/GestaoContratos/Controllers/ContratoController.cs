@@ -1,10 +1,9 @@
-﻿using GestaoContratos.Dominio;
-using GestaoContratos.Processo;
+﻿using GestaoContratos.Dominio.Dto;
+using GestaoContratos.Interface.Processo;
 using GestaoContratos.Util;
 using Swashbuckle.Swagger.Annotations;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Web.Http;
 
@@ -13,16 +12,23 @@ namespace GestaoContratos.Controllers
     [RoutePrefix("api/v1")]
     public class ContratoController : BaseApiController
     {
+        private readonly IContratoProcesso _contratoProcesso;
+        
+        public ContratoController(IContratoProcesso contratoProcesso)
+        {
+            _contratoProcesso = contratoProcesso;
+        }
+
         [HttpGet]       
         [Route("contratos")]        
-        [SwaggerResponse(HttpStatusCode.OK, "Contratos", typeof(IList<Contrato>))]
+        [SwaggerResponse(HttpStatusCode.OK, "Contratos", typeof(IList<ContratoDto>))]
         [SwaggerResponse(HttpStatusCode.NotFound, "Não encontrado")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro interno")]
         public IHttpActionResult ObterContratos()
         {
             try
             {
-                var contratos = new ContratoProcesso().ObterContratos();
+                var contratos = _contratoProcesso.ObterContratos();
                 if (contratos == null || contratos.Count == 0)
                     return NotFound();
                 return Ok(contratos);
@@ -38,11 +44,11 @@ namespace GestaoContratos.Controllers
         [SwaggerResponse(HttpStatusCode.Created, "Criado", typeof(int))]
         [SwaggerResponse(HttpStatusCode.PreconditionFailed, "Erro na requisição")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro interno")]
-        public IHttpActionResult InserirContrato([FromBody] Contrato contrato)
+        public IHttpActionResult InserirContrato([FromBody] ContratoDto contrato)
         {
             try
             {
-                var contratoId = new ContratoProcesso().InserirContrato(contrato);
+                var contratoId = _contratoProcesso.InserirContrato(contrato);
                 return Created(Request.RequestUri + contratoId.ToString(), contratoId);
             }
             catch (RegraNegocioException e)
@@ -57,14 +63,14 @@ namespace GestaoContratos.Controllers
 
         [HttpGet]
         [Route("contratos/{contratoId}")]        
-        [SwaggerResponse(HttpStatusCode.OK, "Contrato", typeof(Contrato))]
+        [SwaggerResponse(HttpStatusCode.OK, "Contrato", typeof(ContratoDto))]
         [SwaggerResponse(HttpStatusCode.NotFound, "Não encontrado")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro interno")]
         public IHttpActionResult ObterContrato(int contratoId)
         {
             try
             {
-                var contrato = new ContratoProcesso().ObterContrato(contratoId);
+                var contrato = _contratoProcesso.ObterContrato(contratoId);
                 if (contrato == null)
                     return NotFound();
                 return Ok(contrato);
@@ -82,14 +88,14 @@ namespace GestaoContratos.Controllers
         [SwaggerResponse(HttpStatusCode.Conflict, "Conflito")]
         [SwaggerResponse(HttpStatusCode.PreconditionFailed, "Erro na requisição")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro interno")]
-        public IHttpActionResult EditarContrato(int contratoId, [FromBody] Contrato contrato)
+        public IHttpActionResult EditarContrato(int contratoId, [FromBody] ContratoDto contrato)
         {
             try
             {
                 if (contrato.ContratoId != contratoId)
                     return Conflict();
 
-                var contratoEditado = new ContratoProcesso().EditarContrato(contrato);
+                var contratoEditado = _contratoProcesso.EditarContrato(contrato);
 
                 if (contratoEditado)
                     return NoContent();
@@ -116,7 +122,7 @@ namespace GestaoContratos.Controllers
         {
             try
             {
-                var contratoDeletado = new ContratoProcesso().DeletarContrato(contratoId);
+                var contratoDeletado = _contratoProcesso.DeletarContrato(contratoId);
                 if (contratoDeletado)
                     return NoContent();
                 else

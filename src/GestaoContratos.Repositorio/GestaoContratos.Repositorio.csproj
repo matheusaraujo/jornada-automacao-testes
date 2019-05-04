@@ -67,9 +67,13 @@
     <Compile Include="TesteRepositorio.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GestaoContratos.Dominio\GestaoContratos.Dominio.csproj">
-      <Project>{49b214ce-d3b8-476d-b992-b7df70940141}</Project>
-      <Name>GestaoContratos.Dominio</Name>
+    <ProjectReference Include="..\GestaoContratos.Dominio.Entidade\GestaoContratos.Dominio.Entidade.csproj">
+      <Project>{51795CEC-D699-43E7-AFAA-3245E5CD0EB2}</Project>
+      <Name>GestaoContratos.Dominio.Entidade</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GestaoContratos.Interface.Repositorio\GestaoContratos.Interface.Repositorio.csproj">
+      <Project>{F6B4FD6F-17C4-4A78-B379-10FB350D15DC}</Project>
+      <Name>GestaoContratos.Interface.Repositorio</Name>
     </ProjectReference>
     <ProjectReference Include="..\GestaoContratos.Util\GestaoContratos.Util.csproj">
       <Project>{4398872B-B7B3-42C5-A43B-032C074CE163}</Project>
