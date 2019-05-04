@@ -5,7 +5,20 @@ namespace GestaoContratos.Repositorio.Mock
 {
     internal static class BancoMemoria
     {
-        internal static List<Contrato> contratos;
-        internal static List<Pedido> pedidos;
+        static BancoMemoria()
+        {
+            Contratos = new List<Contrato>();
+            Pedidos = new List<Pedido>();
+        }
+
+        internal static void Iniciar()
+        {
+            Contratos.Clear();
+            Pedidos.Clear();
+        }
+
+        internal static List<Contrato> Contratos { get; }
+
+        internal static List<Pedido> Pedidos { get; }
     }
 }

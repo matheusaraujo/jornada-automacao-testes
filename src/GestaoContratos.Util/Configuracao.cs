@@ -19,5 +19,13 @@ namespace GestaoContratos.Util
                 return ConfigurationManager.AppSettings["caminhoBancoDados"];
             }
         }
+
+        public static string TipoTesteIntegracao
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["tipoTesteIntegracao"];
+            }
+        }
     }
 }

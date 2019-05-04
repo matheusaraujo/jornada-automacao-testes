@@ -8,8 +8,7 @@ namespace GestaoContratos.Repositorio.Mock
     {
         public void IniciarTestes()
         {
-            BancoMemoria.pedidos = new List<Pedido>();
-            BancoMemoria.contratos = new List<Contrato>();
+            BancoMemoria.Iniciar();
         }
     }
 }
