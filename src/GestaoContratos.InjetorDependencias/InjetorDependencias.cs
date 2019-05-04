@@ -2,6 +2,7 @@
 using GestaoContratos.Interface.Repositorio;
 using GestaoContratos.Processo;
 using GestaoContratos.Repositorio;
+using GestaoContratos.Repositorio.Mock;
 using SimpleInjector;
 
 namespace GestaoContratos.InjetorDependencias
@@ -20,6 +21,24 @@ namespace GestaoContratos.InjetorDependencias
             Container.Register<IContratoRepositorio, ContratoRepositorio>();
             Container.Register<IPedidoRepositorio, PedidoRepositorio>();
             Container.Register<ITesteRepositorio, TesteRepositorio>();
+
+            Container.Register<IContratoProcesso, ContratoProcesso>();
+            Container.Register<IPedidoProcesso, PedidoProcesso>();
+            Container.Register<ITesteProcesso, TesteProcesso>();
+
+            Container.Verify();
+        }
+
+        public static void IniciarMock()
+        {
+            if (Container != null)
+                Container.Dispose();
+
+            Container = new Container();
+
+            Container.Register<IContratoRepositorio, ContratoRepositorioMock>();
+            Container.Register<IPedidoRepositorio, PedidoRepositorioMock>();
+            Container.Register<ITesteRepositorio, TesteRepositorioMock>();
 
             Container.Register<IContratoProcesso, ContratoProcesso>();
             Container.Register<IPedidoProcesso, PedidoProcesso>();

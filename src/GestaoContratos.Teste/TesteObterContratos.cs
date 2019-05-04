@@ -13,8 +13,7 @@ namespace GestaoContratos.Teste
 
         [TestInitialize]
         public void IniciarTestes()
-        {
-            InjetorDependencias.InjetorDependencias.Iniciar();
+        {   
             _testeProcesso = InjetorDependencias.InjetorDependencias.ObterInstancia<ITesteProcesso>();
             _contratoProcesso = InjetorDependencias.InjetorDependencias.ObterInstancia<IContratoProcesso>();
             
